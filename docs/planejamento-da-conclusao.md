@@ -94,7 +94,7 @@ O fluxo diário pode ser executado sem SQL manual:
 - [ ] Confirmar que operador não altera configurações.
 - [ ] Confirmar que operador não cancela atendimentos.
 - [ ] Validar usuário inativo sem acesso aos dados.
-- [ ] Adicionar proteção contra abuso da reserva pública.
+- [x] Adicionar proteção básica contra abuso da reserva pública por limite diário do telefone.
 - [x] Serializar reservas concorrentes e bloquear horários passados no banco.
 - [ ] Revisar mensagens e logs para não expor dados sensíveis.
 
