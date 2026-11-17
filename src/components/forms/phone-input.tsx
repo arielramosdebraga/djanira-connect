@@ -19,5 +19,5 @@ type PhoneInputProps = { name: string; defaultValue?: string; required?: boolean
 
 export default function PhoneInput({ name, defaultValue = "", required = false }: PhoneInputProps) {
   const [value, setValue] = useState(() => formatPhoneInput(defaultValue));
-  return <input className="mt-2 w-full rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none" name={name} inputMode="tel" maxLength={15} placeholder="(11) 99999-9999" required={required} value={value} onChange={(event) => setValue(formatPhoneInput(event.target.value))} />;
+  return <input className="mt-2 w-full rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none" name={name} inputMode="tel" maxLength={15} placeholder="(11) 99999-9999" required={required} data-validation-message="Informe um telefone válido." value={value} onChange={(event) => setValue(formatPhoneInput(event.target.value))} />;
 }

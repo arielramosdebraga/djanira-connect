@@ -32,6 +32,7 @@ export default function SearchableSelect({ name, placeholder, options, required 
         required={required}
         value={query}
         aria-expanded={open}
+        data-validation-message="Selecione uma opção."
         onFocus={() => setOpen(true)}
         onBlur={() => window.setTimeout(() => setOpen(false), 120)}
         onChange={(event) => {
