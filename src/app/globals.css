@@ -29,6 +29,8 @@
 [class~="bg-[#69344b]"]:hover { background-color: var(--salon-copper-dark) !important; }
 [class~="bg-[#25d366]"] { background-color: var(--salon-copper) !important; }
 [class~="bg-[#1da851]"]:hover { background-color: var(--salon-copper-dark) !important; }
+.whatsapp-button { background-color: #25d366 !important; }
+.whatsapp-button:hover { background-color: #1da851 !important; }
 [class~="bg-[#faf0f4]"] { background-color: var(--salon-champagne) !important; }
 [class~="bg-[#e6cbd6]"] { background-color: #ead7b8 !important; }
 [class~="bg-[#fcfbfa]"] { background-color: #fcf8f1 !important; }
