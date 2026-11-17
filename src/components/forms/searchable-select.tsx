@@ -9,12 +9,13 @@ type SearchableSelectProps = {
   placeholder: string;
   options: SearchableOption[];
   required?: boolean;
+  defaultValue?: string;
   onValueChange?: (value: string) => void;
 };
 
-export default function SearchableSelect({ name, placeholder, options, required = false, onValueChange }: SearchableSelectProps) {
+export default function SearchableSelect({ name, placeholder, options, required = false, defaultValue = "", onValueChange }: SearchableSelectProps) {
   const listId = useId();
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(options.find((option) => option.value === defaultValue)?.label ?? "");
   const selectedOption = options.find((option) => option.label === query);
 
   return (

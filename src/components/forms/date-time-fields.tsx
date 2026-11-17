@@ -4,11 +4,11 @@ import { useState } from "react";
 import SearchableSelect from "@/components/forms/searchable-select";
 import MaskedDateInput from "@/components/forms/masked-date-input";
 
-type DateTimeFieldsProps = { name: string; label?: string; commercialHours?: boolean };
+type DateTimeFieldsProps = { name: string; label?: string; commercialHours?: boolean; initialDate?: string; initialTime?: string };
 
-export default function DateTimeFields({ name, label = "Data e horário", commercialHours = false }: DateTimeFieldsProps) {
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
+export default function DateTimeFields({ name, label = "Data e horário", commercialHours = false, initialDate = "", initialTime = "" }: DateTimeFieldsProps) {
+  const [date, setDate] = useState(initialDate);
+  const [time, setTime] = useState(initialTime);
   const firstHour = commercialHours ? 8 : 0;
   const lastHour = commercialHours ? 18 : 23;
   const timeOptions = Array.from({ length: (lastHour - firstHour) * 4 + 1 }, (_, index) => `${String(firstHour + Math.floor(index / 4)).padStart(2, "0")}:${String((index % 4) * 15).padStart(2, "0")}`);
