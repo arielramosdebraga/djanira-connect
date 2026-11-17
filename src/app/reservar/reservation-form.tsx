@@ -31,9 +31,10 @@ function SubmitButton() {
 type ReservationFormProps = {
   action: (formData: FormData) => void | Promise<void>;
   services: Array<{ service_id: string; service_name: string; duration_minutes: number }>;
+  returnTo?: string;
 };
 
-export default function ReservationForm({ action, services }: ReservationFormProps) {
+export default function ReservationForm({ action, services, returnTo = "/reservar" }: ReservationFormProps) {
   const [idempotencyKey, setIdempotencyKey] = useState("");
   const [phone, setPhone] = useState("");
   const [reservationDate, setReservationDate] = useState("");
@@ -82,6 +83,7 @@ export default function ReservationForm({ action, services }: ReservationFormPro
     <form className="mt-8 space-y-5" action={action} onSubmit={handleSubmit}>
       <input type="hidden" name="idempotencyKey" value={idempotencyKey} />
       <input type="hidden" name="startsAt" value={startsAt} />
+      <input type="hidden" name="returnTo" value={returnTo} />
       {formError ? <p className="rounded-xl border border-[#f0caca] bg-[#fff1f1] p-4 text-sm text-[#9b3e3e]" role="alert">{formError}</p> : null}
 
       <label className="block text-sm font-medium">
