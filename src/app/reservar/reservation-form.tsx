@@ -97,12 +97,12 @@ export default function ReservationForm({ action, services }: ReservationFormPro
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="block text-sm font-medium">
           Data desejada
-          <MaskedDateInput value={reservationDate} onChange={setReservationDate} required />
+          <div className="mt-2"><MaskedDateInput value={reservationDate} onChange={setReservationDate} required /></div>
         </label>
 
         <label className="block text-sm font-medium">
           Horário (24h)
-          {loadingTimes ? <p className="mt-2 rounded-xl bg-[#faf5f7] px-4 py-3 text-sm text-[#716963]">Buscando horários livres...</p> : slotsError ? <p className="mt-2 rounded-xl bg-[#fff1f1] px-4 py-3 text-sm text-[#9b3e3e]">Não foi possível consultar os horários. Tente novamente.</p> : availableTimes.length ? <SearchableSelect key={`${serviceId}-${reservationDate}`} name="reservationTime" placeholder="Pesquise ou selecione o horário" required options={availableTimes.map((time) => ({ value: time, label: time }))} onValueChange={setReservationTime} /> : serviceId && reservationDate ? <p className="mt-2 rounded-xl bg-[#faf5f7] px-4 py-3 text-sm text-[#69344b]">Não há horários livres para esta data. Escolha outro dia.</p> : <p className="mt-2 rounded-xl bg-[#faf5f7] px-4 py-3 text-sm text-[#69344b]">Selecione o serviço e a data para ver horários livres.</p>}
+          {loadingTimes ? <p className="mt-2 rounded-xl bg-[#faf5f7] px-4 py-3 text-sm text-[#716963]">Buscando horários livres...</p> : slotsError ? <p className="mt-2 rounded-xl bg-[#fff1f1] px-4 py-3 text-sm text-[#9b3e3e]">Não foi possível consultar os horários. Tente novamente.</p> : availableTimes.length ? <SearchableSelect key={`${serviceId}-${reservationDate}`} name="reservationTime" placeholder="Ex.: 09:00" required options={availableTimes.map((time) => ({ value: time, label: time }))} onValueChange={setReservationTime} /> : serviceId && reservationDate ? <p className="mt-2 rounded-xl bg-[#faf5f7] px-4 py-3 text-sm text-[#69344b]">Não há horários livres para esta data. Escolha outro dia.</p> : <p className="mt-2 rounded-xl bg-[#faf5f7] px-4 py-3 text-sm text-[#69344b]">Selecione o serviço e a data para ver horários livres.</p>}
         </label>
       </div>
 
