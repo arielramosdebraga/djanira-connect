@@ -24,7 +24,7 @@ export default function AttendanceForm({ action, customers, services, attendance
   const [idempotencyKey, setIdempotencyKey] = useState("");
   useEffect(() => { setIdempotencyKey(crypto.randomUUID()); }, []);
 
-  return <form className="mt-6 space-y-4" action={action}>
+  return <form className="pt-6 space-y-4" action={action}>
     <input type="hidden" name="idempotencyKey" value={idempotencyKey} />
     {attendanceId ? <input type="hidden" name="attendanceId" value={attendanceId} /> : null}
     <label className="block text-sm font-medium">
