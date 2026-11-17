@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 
 function formatPhoneInput(value: string) {
@@ -31,7 +31,7 @@ type ReservationFormProps = {
 };
 
 export default function ReservationForm({ action, services }: ReservationFormProps) {
-  const [idempotencyKey] = useState(() => crypto.randomUUID());
+  const [idempotencyKey, setIdempotencyKey] = useState("");
   const [phone, setPhone] = useState("");
   const [reservationDate, setReservationDate] = useState("");
   const [reservationTime, setReservationTime] = useState("");
@@ -41,6 +41,10 @@ export default function ReservationForm({ action, services }: ReservationFormPro
     const minutes = String((index % 4) * 15).padStart(2, "0");
     return `${hours}:${minutes}`;
   });
+
+  useEffect(() => {
+    setIdempotencyKey(crypto.randomUUID());
+  }, []);
 
   return (
     <form className="mt-8 space-y-5" action={action}>
@@ -118,9 +122,7 @@ export default function ReservationForm({ action, services }: ReservationFormPro
       <input
         type="hidden"
         name="startsAt"
-        value={reservationDateTime.length === 16
-          ? `${reservationDateTime.slice(6, 10)}-${reservationDateTime.slice(3, 5)}-${reservationDateTime.slice(0, 2)}T${reservationDateTime.slice(11, 16)}`
-          : ""}
+        value={reservationDate && reservationTime ? `${reservationDate}T${reservationTime}` : ""}
       />
 
       <SubmitButton />
