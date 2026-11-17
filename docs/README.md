@@ -7,6 +7,8 @@
 
 ## Documentos de execução
 
+- [Instruções para agentes](AGENTS.md): regras de trabalho, arquitetura, segurança e validação no repositório.
+- [PRD](prd.md): visão, usuários, escopo, requisitos e critérios de aceite do produto.
 - [Roadmap e módulos](roadmap.md): ordem de implementação, escopo e critérios de conclusão.
 - [Arquitetura](arquitetura.md): stack, organização do código e fronteiras dos módulos.
 - [Modelo de dados](modelo-de-dados.md): entidades, relacionamentos e convenções persistentes.

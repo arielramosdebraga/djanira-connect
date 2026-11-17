@@ -4,7 +4,8 @@
 
 - `main`: referência estável.
 - `develop`: integração da sprint.
-- `feature/modulo-*`: desenvolvimento isolado de cada módulo.
+- `feature/modulo-*`: desenvolvimento isolado de cada módulo, aberta ou
+  atualizada quando o módulo entrar em implementação.
 
 Branches existentes:
 
@@ -20,8 +21,9 @@ Branches existentes:
 
 ## Fluxo de trabalho
 
-1. Partir de `develop`.
-2. Trabalhar em uma branch de módulo.
+1. Atualizar `develop`.
+2. Criar ou atualizar a branch do módulo a partir de `develop` quando o trabalho
+   naquele módulo começar.
 3. Implementar banco, servidor, interface e testes necessários.
 4. Executar as validações locais.
 5. Criar commit semântico em português.

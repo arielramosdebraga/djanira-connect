@@ -12,13 +12,19 @@ Fluxo validável de ponta a ponta:
 | --- | --- | --- | --- |
 | 1 | Fundação | `feature/modulo-fundacao` | Aplicação privada, autenticação e permissões |
 | 2 | Serviços | `feature/modulo-servicos` | Catálogo de serviços ativo/inativo |
-| 3 | Contatos | `feature/modulo-contatos` | Cadastro, busca, filtros e histórico básico |
+| 3 | Contatos - cadastro e busca | `feature/modulo-contatos` | Cadastro, edição, normalização de telefone e busca |
 | 4 | Atendimentos | `feature/modulo-atendimentos` | Registro histórico de serviços realizados |
-| 5 | Retornos e WhatsApp | `feature/modulo-retornos-whatsapp` | Fila de retorno e contato manual |
-| 6 | Agenda | `feature/modulo-agenda` | Horários, folgas e agenda interna |
-| 7 | Reservas públicas | `feature/modulo-reservas-publicas` | Cliente escolhe serviço e horário |
-| 8 | Confirmações | `feature/modulo-confirmacoes` | Confirmações e lembretes de reserva |
-| 9 | Contratos e salas | `feature/modulo-contratos-salas` | Contratos versionados e gestão de salas |
+| 5 | Contatos - histórico e filtros dependentes | `feature/modulo-contatos` | Histórico de serviços e filtros que dependem de atendimentos/retornos |
+| 6 | Retornos e WhatsApp | `feature/modulo-retornos-whatsapp` | Fila de retorno e contato manual |
+| 7 | Agenda | `feature/modulo-agenda` | Horários, folgas e agenda interna |
+| 8 | Reservas públicas | `feature/modulo-reservas-publicas` | Cliente escolhe serviço e horário |
+| 9 | Confirmações | `feature/modulo-confirmacoes` | Confirmações e lembretes de reserva |
+| 10 | Contratos e salas | `feature/modulo-contratos-salas` | Contratos versionados e gestão de salas |
+
+O módulo de contatos é entregue em duas partes por dependência funcional. O
+cadastro e a busca podem ser testados antes de atendimentos. Histórico de
+serviços, filtros por serviço e filtros de retorno são concluídos quando os
+módulos de atendimentos e retornos fornecerem os dados necessários.
 
 ## Critério de conclusão de módulo
 
