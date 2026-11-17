@@ -33,6 +33,8 @@ type ReservationFormProps = {
 export default function ReservationForm({ action, services }: ReservationFormProps) {
   const [idempotencyKey] = useState(() => crypto.randomUUID());
   const [phone, setPhone] = useState("");
+  const [reservationDate, setReservationDate] = useState("");
+  const [reservationTime, setReservationTime] = useState("");
 
   return (
     <form className="mt-8 space-y-5" action={action}>
@@ -60,21 +62,48 @@ export default function ReservationForm({ action, services }: ReservationFormPro
         <input className="mt-2 w-full rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none" name="phone" inputMode="tel" maxLength={15} placeholder="(11) 99999-9999" required value={phone} onChange={(event) => setPhone(formatPhoneInput(event.target.value))} />
       </label>
 
-      <label className="block text-sm font-medium">
-        Data e horário desejados
-        <input
-          className="mt-2 w-full cursor-pointer rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none"
-          name="startsAt"
-          type="datetime-local"
-          required
-          onClick={(event) => {
-            const input = event.currentTarget;
-            if ("showPicker" in input) {
-              (input as HTMLInputElement & { showPicker: () => void }).showPicker();
-            }
-          }}
-        />
-      </label>
+      <div className="grid gap-5 sm:grid-cols-2">
+        <label className="block text-sm font-medium">
+          Data desejada
+          <input
+            className="mt-2 w-full cursor-pointer rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none"
+            name="reservationDate"
+            type="date"
+            lang="pt-BR"
+            required
+            value={reservationDate}
+            onChange={(event) => setReservationDate(event.target.value)}
+            onClick={(event) => {
+              const input = event.currentTarget;
+              if ("showPicker" in input) {
+                (input as HTMLInputElement & { showPicker: () => void }).showPicker();
+              }
+            }}
+          />
+        </label>
+
+        <label className="block text-sm font-medium">
+          Horário (24h)
+          <input
+            className="mt-2 w-full cursor-pointer rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none"
+            name="reservationTime"
+            type="time"
+            lang="pt-BR"
+            step={900}
+            required
+            value={reservationTime}
+            onChange={(event) => setReservationTime(event.target.value)}
+            onClick={(event) => {
+              const input = event.currentTarget;
+              if ("showPicker" in input) {
+                (input as HTMLInputElement & { showPicker: () => void }).showPicker();
+              }
+            }}
+          />
+        </label>
+      </div>
+
+      <input type="hidden" name="startsAt" value={reservationDate && reservationTime ? `${reservationDate}T${reservationTime}` : ""} />
 
       <SubmitButton />
     </form>
