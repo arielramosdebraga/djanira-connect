@@ -91,12 +91,24 @@ begin
     values (v_organization_id, v_customer_marina, v_service_cut, now() - interval '12 days', 'Corte feminino', 45, 45, 7000, 'Atendimento fictício concluído.', v_user_id, 'demo-attendance-marina-cut')
     on conflict (organization_id, idempotency_key) do nothing;
 
-    insert into public.appointments (organization_id, customer_id, service_id, starts_at, ends_at, status, notes, created_by, idempotency_key, source)
-    select v_organization_id, v_customer_beatriz, v_service_brows,
-      (current_date + interval '1 day' + interval '10 hours') at time zone 'America/Sao_Paulo',
-      (current_date + interval '1 day' + interval '10 hours 30 minutes') at time zone 'America/Sao_Paulo',
-      'scheduled', 'Compromisso fictício para testar a agenda.', v_user_id, 'demo-appointment-beatriz-brows', 'internal'
-    where not exists (select 1 from public.appointments where organization_id = v_organization_id and idempotency_key = 'demo-appointment-beatriz-brows');
+    if exists (
+      select 1 from information_schema.columns
+      where table_schema = 'public' and table_name = 'appointments' and column_name = 'source'
+    ) then
+      insert into public.appointments (organization_id, customer_id, service_id, starts_at, ends_at, status, notes, created_by, idempotency_key, source)
+      select v_organization_id, v_customer_beatriz, v_service_brows,
+        (current_date + interval '1 day' + interval '10 hours') at time zone 'America/Sao_Paulo',
+        (current_date + interval '1 day' + interval '10 hours 30 minutes') at time zone 'America/Sao_Paulo',
+        'scheduled', 'Compromisso fictício para testar a agenda.', v_user_id, 'demo-appointment-beatriz-brows', 'internal'
+      where not exists (select 1 from public.appointments where organization_id = v_organization_id and idempotency_key = 'demo-appointment-beatriz-brows');
+    else
+      insert into public.appointments (organization_id, customer_id, service_id, starts_at, ends_at, status, notes, created_by, idempotency_key)
+      select v_organization_id, v_customer_beatriz, v_service_brows,
+        (current_date + interval '1 day' + interval '10 hours') at time zone 'America/Sao_Paulo',
+        (current_date + interval '1 day' + interval '10 hours 30 minutes') at time zone 'America/Sao_Paulo',
+        'scheduled', 'Compromisso fictício para testar a agenda.', v_user_id, 'demo-appointment-beatriz-brows'
+      where not exists (select 1 from public.appointments where organization_id = v_organization_id and idempotency_key = 'demo-appointment-beatriz-brows');
+    end if;
   end if;
 end;
 $$;
