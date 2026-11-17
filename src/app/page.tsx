@@ -9,7 +9,7 @@ export default function HomePage() {
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#8f4e68]">Djanira Connect</p>
             <p className="mt-1 text-sm text-[#716963]">Gestão simples para a rotina do salão</p>
           </div>
-          <Link className="rounded-full border border-[#d9cec8] px-5 py-2.5 text-sm font-semibold transition hover:border-[#8f4e68] hover:text-[#8f4e68]" href="/login">Entrar</Link>
+          <div className="flex items-center gap-3"><Link className="rounded-full border border-[#d9cec8] px-5 py-2.5 text-sm font-semibold transition hover:border-[#8f4e68] hover:text-[#8f4e68]" href="/reservar">Reservar</Link><Link className="rounded-full border border-[#d9cec8] px-5 py-2.5 text-sm font-semibold transition hover:border-[#8f4e68] hover:text-[#8f4e68]" href="/login">Entrar</Link></div>
         </header>
 
         <section className="grid gap-12 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
