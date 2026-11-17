@@ -30,6 +30,7 @@
 - Valide entradas e autorize operações no servidor.
 - Proteja tabelas de negócio com Row Level Security; permissões não podem depender apenas de elementos ocultos na interface.
 - Nunca exponha chaves administrativas ou segredos no navegador, em logs ou no controle de versão.
+- Para o Supabase web, use `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`; aceite a chave `anon` legada apenas como compatibilidade temporária.
 - Use dados fictícios em desenvolvimento e não conecte previews ao banco de produção.
 - Evite registrar telefones completos e observações de clientes em logs.
 - Preserve snapshots e rastreabilidade de dados históricos de atendimentos, retornos e contratos.
