@@ -21,8 +21,8 @@ export default function AppointmentForm({ action, customers, services }: Appoint
   const [reservationDate, setReservationDate] = useState("");
   const [reservationTime, setReservationTime] = useState("");
   const datePickerRef = useRef<HTMLInputElement>(null);
-  const timeOptions = Array.from({ length: 96 }, (_, index) => {
-    const hours = String(Math.floor(index / 4)).padStart(2, "0");
+  const timeOptions = Array.from({ length: 41 }, (_, index) => {
+    const hours = String(8 + Math.floor(index / 4)).padStart(2, "0");
     const minutes = String((index % 4) * 15).padStart(2, "0");
     return `${hours}:${minutes}`;
   });
