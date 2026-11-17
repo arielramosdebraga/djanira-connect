@@ -15,6 +15,7 @@
 - [Regras de negócio](regras-de-negocio.md): comportamentos que devem ser preservados na implementação.
 - [Guia de desenvolvimento](guia-de-desenvolvimento.md): fluxo local, branches, validações e publicação.
 - [Decisões e pendências](decisoes.md): decisões assumidas e pontos que precisam de confirmação.
+- [Planejamento de conclusão](planejamento-da-conclusao.md): fases, pendências e critérios para liberar o MVP.
 
 ## Como usar esta documentação
 
