@@ -1,6 +1,6 @@
 # Planejamento de conclusão — Djanira Connect
 
-Atualizado em 16/11/2026.
+Atualizado em 17/11/2026.
 
 ## 1. Objetivo
 
@@ -27,6 +27,8 @@ misturar funcionalidades ainda não necessárias ao piloto.
 - Calendário semanal na página inicial.
 - Modal de novo agendamento na página inicial.
 - Reservas públicas com cadastro automático de cliente e horários livres por serviço/data.
+- Correção administrativa de atendimentos com recálculo de retornos.
+- Proteção de reservas concorrentes, horários passados e limite diário por telefone.
 - Migrations e dados fictícios para desenvolvimento.
 
 ### Fora do escopo imediato
@@ -62,7 +64,7 @@ erros de migration.
 - [x] Considerar dias inativos da agenda.
 - [x] Exibir mensagem clara quando não houver horários.
 - [x] Adicionar botão para contato direto com o salão após a solicitação.
-- [ ] Validar submissões repetidas e reservas simultâneas.
+- [x] Validar submissões repetidas por idempotência e reservas simultâneas no banco.
 
 ### Contatos
 
@@ -75,9 +77,9 @@ erros de migration.
 ### Atendimentos e retornos
 
 - [x] Permitir correção de atendimento conforme o papel do usuário.
-- [ ] Revisar a reavaliação de retornos após cancelamento.
+- [x] Revisar a reavaliação de retornos após cancelamento.
 - [ ] Exibir mensagens de erro específicas nas ações restantes.
-- [ ] Confirmar que clientes arquivados ou com restrição não entram na fila.
+- [x] Confirmar no carregamento da fila que clientes arquivados ou com restrição não entram.
 
 ### Critério de aceite
 
