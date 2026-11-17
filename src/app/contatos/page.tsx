@@ -6,6 +6,7 @@ import { requireActiveMember } from "@/lib/auth/session";
 type ContactsPageProps = { searchParams: Promise<{ erro?: string; resultado?: string; busca?: string }> };
 
 export const metadata = { title: "Contatos" };
+export const instant = false;
 
 export default async function ContactsPage({ searchParams }: ContactsPageProps) {
   const { membership, supabase } = await requireActiveMember();

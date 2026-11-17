@@ -10,6 +10,7 @@ function formatPrice(cents: number | null) {
 }
 
 export const metadata = { title: "Serviços" };
+export const instant = false;
 
 export default async function ServicesPage({ searchParams }: ServicesPageProps) {
   const { membership, supabase } = await requireActiveMember();

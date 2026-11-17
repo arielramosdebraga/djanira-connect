@@ -1,0 +1,21 @@
+import Link from "next/link";
+import { createAttendanceAction } from "@/app/atendimentos/actions";
+import AttendanceForm from "@/app/atendimentos/attendance-form";
+import { requireActiveMember } from "@/lib/auth/session";
+
+type AttendancesPageProps = { searchParams: Promise<{ erro?: string; resultado?: string }> };
+
+export const metadata = { title: "Atendimentos" };
+export const instant = false;
+
+export default async function AttendancesPage({ searchParams }: AttendancesPageProps) {
+  const { membership, supabase } = await requireActiveMember();
+  const params = await searchParams;
+  const [{ data: customers }, { data: services }, { data: attendances, error }] = await Promise.all([
+    supabase.from("customers").select("id, name").eq("organization_id", membership.organization_id).eq("status", "active").order("name"),
+    supabase.from("services").select("id, name, average_price_cents").eq("organization_id", membership.organization_id).eq("active", true).order("name"),
+    supabase.from("attendances").select("id, performed_at, service_name_snapshot, price_cents, status, customers(name)").eq("organization_id", membership.organization_id).order("performed_at", { ascending: false }).limit(20),
+  ]);
+
+  return <main className="min-h-screen bg-[#f8f7f4] px-6 py-8 text-[#29231f] sm:px-10"><div className="mx-auto max-w-6xl"><header className="flex flex-wrap items-center justify-between gap-4"><div><Link className="text-sm font-semibold text-[#8f4e68]" href="/inicio">← Início</Link><h1 className="mt-3 text-3xl font-semibold">Atendimentos</h1><p className="mt-2 text-[#716963]">Registre serviços já realizados e preserve o histórico do cliente.</p></div><Link className="rounded-full border border-[#d9cec8] px-5 py-2.5 text-sm font-semibold hover:border-[#8f4e68] hover:text-[#8f4e68]" href="/auth/logout">Sair</Link></header>{params.erro ? <p className="mt-6 rounded-xl bg-[#fff1f1] p-4 text-sm text-[#9b3e3e]" role="alert">{params.erro}</p> : null}{params.resultado ? <p className="mt-6 rounded-xl bg-[#edf8f0] p-4 text-sm text-[#287342]" role="status">Atendimento registrado e retorno atualizado.</p> : null}<div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]"><section className="rounded-[2rem] border border-[#e8e1dc] bg-white p-6 sm:p-8"><h2 className="text-xl font-semibold">Novo atendimento</h2>{!customers?.length || !services?.length ? <p className="mt-4 rounded-2xl bg-[#faf5f7] p-5 text-sm leading-6 text-[#69344b]">Cadastre pelo menos um contato e um serviço antes de registrar um atendimento.</p> : <AttendanceForm action={createAttendanceAction} customers={customers} services={services} />}</section><section className="rounded-[2rem] border border-[#e8e1dc] bg-white p-6 sm:p-8"><h2 className="text-xl font-semibold">Histórico recente</h2>{error ? <p className="mt-6 rounded-xl bg-[#fff1f1] p-4 text-sm text-[#9b3e3e]">Não foi possível carregar o histórico.</p> : attendances?.length ? <div className="mt-6 space-y-3">{attendances.map((attendance) => <article className="rounded-2xl border border-[#eee8e3] p-4" key={attendance.id}><p className="font-semibold">{attendance.customers?.[0]?.name ?? "Contato"}</p><p className="mt-1 text-sm text-[#716963]">{attendance.service_name_snapshot} · {new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(new Date(attendance.performed_at))}</p><p className="mt-1 text-xs font-semibold uppercase tracking-wide text-[#8f4e68]">{attendance.status === "completed" ? "Concluído" : "Cancelado"}</p></article>)}</div> : <div className="mt-6 rounded-2xl bg-[#faf5f7] p-6 text-sm leading-6 text-[#69344b]">Nenhum atendimento registrado ainda.</div>}</section></div></div></main>;
+}
