@@ -1,12 +1,12 @@
 # Status da implementação
 
-Atualizado em 16/11/2026.
+Atualizado em 17/11/2026.
 
 ## Implementado
 
 - Fundação: autenticação, sessão protegida, organização e papéis.
 - Serviços: cadastro, ativação e desativação.
-- Contatos: cadastro, edição, arquivamento, máscara de telefone, busca instantânea e filtros.
+- Contatos: cadastro, edição, arquivamento, máscara de telefone, busca instantânea, filtros e data do último contato.
 - Atendimentos: registro, snapshots históricos, retornos e cancelamento administrativo.
 - Retornos: fila, adiamento, dispensa, WhatsApp manual e registro explícito de contato.
 - Configurações: nome, fuso horário e mensagem padrão.
@@ -27,6 +27,7 @@ Executar em ordem no projeto Supabase:
 4. `20261116001200_cancel_attendances.sql`
 5. `20261116001300_public_available_slots.sql`
 6. `20261116001400_salon_whatsapp.sql`
+7. `20261117000100_edit_attendances.sql`
 
 As migrations de `001` a `008` são pré-requisitos dos módulos anteriores.
 
