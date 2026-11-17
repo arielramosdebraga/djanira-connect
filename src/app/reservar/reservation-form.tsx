@@ -41,6 +41,7 @@ export default function ReservationForm({ action, services }: ReservationFormPro
   const [serviceId, setServiceId] = useState("");
   const [availableTimes, setAvailableTimes] = useState<string[]>([]);
   const [loadingTimes, setLoadingTimes] = useState(false);
+  const [slotsError, setSlotsError] = useState(false);
 
   useEffect(() => {
     setIdempotencyKey(crypto.randomUUID());
@@ -50,12 +51,15 @@ export default function ReservationForm({ action, services }: ReservationFormPro
     setReservationTime("");
     if (!serviceId || !reservationDate) {
       setAvailableTimes([]);
+      setSlotsError(false);
       return;
     }
     let cancelled = false;
     setLoadingTimes(true);
+    setSlotsError(false);
     createClient().rpc("get_public_reservation_slots", { p_service_id: serviceId, p_date: reservationDate }).then(({ data, error }) => {
       if (cancelled) return;
+      setSlotsError(Boolean(error));
       setAvailableTimes(error ? [] : (data ?? []).map((slot: { slot_time: string }) => slot.slot_time.slice(0, 5)));
       setLoadingTimes(false);
     });
@@ -98,7 +102,7 @@ export default function ReservationForm({ action, services }: ReservationFormPro
 
         <label className="block text-sm font-medium">
           Horário (24h)
-          {loadingTimes ? <p className="mt-2 rounded-xl bg-[#faf5f7] px-4 py-3 text-sm text-[#716963]">Buscando horários livres...</p> : availableTimes.length ? <SearchableSelect key={`${serviceId}-${reservationDate}`} name="reservationTime" placeholder="Pesquise ou selecione o horário" required options={availableTimes.map((time) => ({ value: time, label: time }))} onValueChange={setReservationTime} /> : <p className="mt-2 rounded-xl bg-[#faf5f7] px-4 py-3 text-sm text-[#69344b]">Selecione o serviço e a data para ver horários livres.</p>}
+          {loadingTimes ? <p className="mt-2 rounded-xl bg-[#faf5f7] px-4 py-3 text-sm text-[#716963]">Buscando horários livres...</p> : slotsError ? <p className="mt-2 rounded-xl bg-[#fff1f1] px-4 py-3 text-sm text-[#9b3e3e]">Não foi possível consultar os horários. Tente novamente.</p> : availableTimes.length ? <SearchableSelect key={`${serviceId}-${reservationDate}`} name="reservationTime" placeholder="Pesquise ou selecione o horário" required options={availableTimes.map((time) => ({ value: time, label: time }))} onValueChange={setReservationTime} /> : <p className="mt-2 rounded-xl bg-[#faf5f7] px-4 py-3 text-sm text-[#69344b]">Selecione o serviço e a data para ver horários livres.</p>}
         </label>
       </div>
 
