@@ -23,28 +23,28 @@ body {
 
 * { box-sizing: border-box; }
 
-section[role="dialog"] {
+section[role="dialog"], .modal-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: #caa8b7 transparent;
 }
 
-section[role="dialog"]::-webkit-scrollbar {
+section[role="dialog"]::-webkit-scrollbar, .modal-scrollbar::-webkit-scrollbar {
   width: 8px;
 }
 
-section[role="dialog"]::-webkit-scrollbar-track {
+section[role="dialog"]::-webkit-scrollbar-track, .modal-scrollbar::-webkit-scrollbar-track {
   background: transparent;
   margin: 1.5rem 0;
 }
 
-section[role="dialog"]::-webkit-scrollbar-thumb {
+section[role="dialog"]::-webkit-scrollbar-thumb, .modal-scrollbar::-webkit-scrollbar-thumb {
   background: #caa8b7;
   border: 2px solid transparent;
   border-radius: 999px;
   background-clip: padding-box;
 }
 
-section[role="dialog"]::-webkit-scrollbar-thumb:hover {
+section[role="dialog"]::-webkit-scrollbar-thumb:hover, .modal-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #8f4e68;
   border-width: 1px;
 }
