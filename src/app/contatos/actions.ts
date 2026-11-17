@@ -40,3 +40,32 @@ export async function createContactAction(formData: FormData) {
   revalidatePath("/contatos");
   redirect("/contatos?resultado=criado");
 }
+
+export async function updateContactAction(formData: FormData) {
+  const { membership, supabase } = await requireActiveMember();
+  const contactId = String(formData.get("contactId") ?? "");
+  const parsed = contactInputSchema.safeParse({
+    name: formData.get("name"),
+    phone: formData.get("phone"),
+    notes: formData.get("notes") || undefined,
+    doNotContact: formData.get("doNotContact") === "on",
+  });
+  if (!contactId || !parsed.success) redirect(`/contatos/${contactId}?erro=${encodeURIComponent(parsed.success ? "Contato inválido." : parsed.error.issues[0]?.message ?? "Confira os dados informados.")}`);
+
+  let phoneNormalized: string;
+  try { phoneNormalized = normalizePhone(parsed.data.phone); } catch (error) { redirect(`/contatos/${contactId}?erro=${encodeURIComponent(error instanceof Error ? error.message : "Informe um telefone válido.")}`); }
+  const { error } = await supabase.from("customers").update({ name: parsed.data.name, phone_normalized: phoneNormalized, notes: parsed.data.notes || null, do_not_contact: parsed.data.doNotContact, updated_at: new Date().toISOString() }).eq("id", contactId).eq("organization_id", membership.organization_id);
+  if (error) redirect(`/contatos/${contactId}?erro=Não foi possível atualizar o contato.`);
+  revalidatePath("/contatos"); revalidatePath(`/contatos/${contactId}`);
+  redirect(`/contatos/${contactId}?resultado=atualizado`);
+}
+
+export async function archiveContactAction(formData: FormData) {
+  const { membership, supabase } = await requireActiveMember();
+  const contactId = String(formData.get("contactId") ?? "");
+  if (!contactId) redirect("/contatos?erro=Contato inválido.");
+  const { error } = await supabase.from("customers").update({ status: "archived", updated_at: new Date().toISOString() }).eq("id", contactId).eq("organization_id", membership.organization_id);
+  if (error) redirect(`/contatos/${contactId}?erro=Não foi possível arquivar o contato.`);
+  revalidatePath("/contatos");
+  redirect("/contatos?resultado=arquivado");
+}
