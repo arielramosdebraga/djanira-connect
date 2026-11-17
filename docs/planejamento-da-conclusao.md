@@ -22,16 +22,17 @@ misturar funcionalidades ainda não necessárias ao piloto.
 - Cancelamento administrativo de atendimentos.
 - Retornos, adiamento, dispensa e contato manual pelo WhatsApp.
 - Configurações do salão.
+- Telefone do salão e contato direto via WhatsApp após reserva pública.
 - Agenda interna com expediente de 09:00 às 18:00.
 - Calendário semanal na página inicial.
 - Modal de novo agendamento na página inicial.
-- Reservas públicas com cadastro automático de cliente.
+- Reservas públicas com cadastro automático de cliente e horários livres por serviço/data.
 - Migrations e dados fictícios para desenvolvimento.
 
 ### Fora do escopo imediato
 
 - Confirmações e lembretes automáticos.
-- Integração oficial com WhatsApp.
+- Integração oficial com WhatsApp (o MVP possui apenas link direto para conversa).
 - Contratos e gestão de salas.
 - Pagamentos, estoque, comissões e campanhas.
 
@@ -56,11 +57,11 @@ erros de migration.
 
 ### Reservas públicas
 
-- [ ] Substituir a escolha livre de horário por horários realmente disponíveis.
-- [ ] Ocultar horários ocupados.
-- [ ] Considerar dias inativos da agenda.
-- [ ] Exibir mensagem clara quando não houver horários.
-- [ ] Adicionar botão para contato direto com o salão após a solicitação.
+- [x] Substituir a escolha livre de horário por horários realmente disponíveis.
+- [x] Ocultar horários ocupados.
+- [x] Considerar dias inativos da agenda.
+- [x] Exibir mensagem clara quando não houver horários.
+- [x] Adicionar botão para contato direto com o salão após a solicitação.
 - [ ] Validar submissões repetidas e reservas simultâneas.
 
 ### Contatos
@@ -175,14 +176,13 @@ teste e sem intervenção técnica.
 ## 4. Ordem recomendada de execução
 
 1. Aplicar e conferir migrations.
-2. Finalizar horários disponíveis da reserva pública.
-3. Completar filtros e paginação de contatos.
-4. Revisar cancelamento e correção de atendimentos.
-5. Fazer revisão de segurança e permissões.
-6. Executar validações técnicas.
-7. Configurar operação e backups.
-8. Realizar aceite manual.
-9. Integrar a branch e publicar.
+2. Completar paginação de contatos.
+3. Revisar cancelamento e correção de atendimentos.
+4. Fazer revisão de segurança e permissões.
+5. Executar validações técnicas.
+6. Configurar operação e backups.
+7. Realizar aceite manual.
+8. Integrar a branch e publicar.
 
 ## 5. Módulos posteriores
 

@@ -10,8 +10,10 @@ Atualizado em 16/11/2026.
 - Atendimentos: registro, snapshots históricos, retornos e cancelamento administrativo.
 - Retornos: fila, adiamento, dispensa, WhatsApp manual e registro explícito de contato.
 - Configurações: nome, fuso horário e mensagem padrão.
+- Configurações: telefone do WhatsApp do salão.
 - Agenda: horários semanais fixos das 09:00 às 18:00 e compromissos internos.
 - Reservas públicas: catálogo, validação de disponibilidade e criação de cliente/reserva.
+- Reservas públicas: horários livres por serviço/data e contato direto via WhatsApp.
 - Início: calendário semanal e modal para novo agendamento.
 - Massa fictícia para validação manual.
 
@@ -23,6 +25,8 @@ Executar em ordem no projeto Supabase:
 2. `20261116001000_demo_data.sql`
 3. `20261116001100_fixed_business_hours.sql`
 4. `20261116001200_cancel_attendances.sql`
+5. `20261116001300_public_available_slots.sql`
+6. `20261116001400_salon_whatsapp.sql`
 
 As migrations de `001` a `008` são pré-requisitos dos módulos anteriores.
 
@@ -35,7 +39,7 @@ As migrations de `001` a `008` são pré-requisitos dos módulos anteriores.
 - Configurar variáveis de ambiente na hospedagem.
 - Definir backup, restauração e procedimento de recuperação de acesso.
 - Revisar proteção contra abuso da reserva pública.
-- Atualizar o PRD e o roadmap para refletir que agenda e reservas já foram implementadas.
+- Atualizar o PRD e o roadmap para refletir que agenda, horários públicos e contato via WhatsApp já foram implementados.
 - Integrar a branch do módulo em `develop` após a validação.
 
 ## Critério de liberação
