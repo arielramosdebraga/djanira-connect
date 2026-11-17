@@ -12,7 +12,17 @@ export const instant = false;
 export default async function ContactsPage({ searchParams }: ContactsPageProps) {
   const { membership, supabase } = await requireActiveMember();
   const params = await searchParams;
-  const { data: contacts, error } = await supabase.from("customers").select("id, name, phone_normalized, notes, do_not_contact, status, last_contact_at").eq("organization_id", membership.organization_id).eq("status", "active").order("name").limit(100);
+  const [{ data: contacts, error }, { data: services }, { data: attendanceRows }, { data: followUpRows }] = await Promise.all([
+    supabase.from("customers").select("id, name, phone_normalized, notes, do_not_contact, status, last_contact_at").eq("organization_id", membership.organization_id).eq("status", "active").order("name").limit(100),
+    supabase.from("services").select("id, name").eq("organization_id", membership.organization_id).order("name"),
+    supabase.from("attendances").select("customer_id, service_id").eq("organization_id", membership.organization_id).eq("status", "completed"),
+    supabase.from("follow_ups").select("customer_id, status").eq("organization_id", membership.organization_id),
+  ]);
+  const contactsWithFilters = (contacts ?? []).map((contact) => ({
+    ...contact,
+    serviceIds: (attendanceRows ?? []).filter((row) => row.customer_id === contact.id).map((row) => row.service_id),
+    followUpStatuses: (followUpRows ?? []).filter((row) => row.customer_id === contact.id).map((row) => row.status),
+  }));
 
   return (
     <main className="min-h-screen bg-[#f8f7f4] px-6 py-8 text-[#29231f] sm:px-10">
@@ -32,7 +42,7 @@ export default async function ContactsPage({ searchParams }: ContactsPageProps) 
               <button className="w-full rounded-xl bg-[#8f4e68] px-5 py-3.5 font-semibold text-white hover:bg-[#69344b]" type="submit">Cadastrar contato</button>
             </form>
           </section>
-          {error ? <p className="mt-6 rounded-xl bg-[#fff1f1] p-4 text-sm text-[#9b3e3e]">Não foi possível carregar os contatos.</p> : <ContactList contacts={contacts ?? []} />}
+          {error ? <p className="mt-6 rounded-xl bg-[#fff1f1] p-4 text-sm text-[#9b3e3e]">Não foi possível carregar os contatos.</p> : <ContactList contacts={contactsWithFilters} services={services ?? []} />}
         </div>
       </div>
     </main>
