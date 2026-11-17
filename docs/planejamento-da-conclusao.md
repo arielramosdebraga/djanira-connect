@@ -44,7 +44,7 @@ misturar funcionalidades ainda não necessárias ao piloto.
 
 ### Tarefas
 
-- [ ] Aplicar todas as migrations no Supabase na ordem correta.
+- [x] Aplicar todas as migrations do MVP no Supabase na ordem correta.
 - [ ] Aplicar os dados fictícios em ambiente de desenvolvimento.
 - [ ] Confirmar organização e membros ativos.
 - [ ] Confirmar que o expediente está sem intervalos e entre 09:00 e 18:00.
@@ -68,9 +68,9 @@ erros de migration.
 
 ### Contatos
 
-- [ ] Adicionar filtro “sem contato há X dias”.
-- [ ] Adicionar filtro de clientes que nunca receberam contato.
-- [ ] Exibir a data do último contato na lista e na ficha.
+- [x] Adicionar filtro “sem contato há X dias”.
+- [x] Adicionar filtro de clientes que nunca receberam contato.
+- [x] Exibir a data do último contato na lista e na ficha.
 - [ ] Adicionar paginação quando o volume ultrapassar o limite da tela.
 - [x] Exibir a data do último contato e o estado de nunca contatado.
 

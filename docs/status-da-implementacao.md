@@ -17,7 +17,7 @@ Atualizado em 17/11/2026.
 - Início: calendário semanal e modal para novo agendamento.
 - Massa fictícia para validação manual.
 
-## Migrations que precisam estar aplicadas
+## Migrations aplicadas no ambiente de desenvolvimento
 
 Executar em ordem no projeto Supabase:
 
