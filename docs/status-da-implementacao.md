@@ -28,6 +28,7 @@ Executar em ordem no projeto Supabase:
 5. `20261116001300_public_available_slots.sql`
 6. `20261116001400_salon_whatsapp.sql`
 7. `20261117000100_edit_attendances.sql`
+8. `20261117000200_public_reservation_safety.sql`
 
 As migrations de `001` a `008` são pré-requisitos dos módulos anteriores.
 
@@ -39,7 +40,7 @@ As migrations de `001` a `008` são pré-requisitos dos módulos anteriores.
 - Testar recuperação de senha e configuração de e-mail do Supabase.
 - Configurar variáveis de ambiente na hospedagem.
 - Definir backup, restauração e procedimento de recuperação de acesso.
-- Revisar proteção contra abuso da reserva pública.
+- Revisar proteção contra abuso da reserva pública além da serialização de conflitos.
 - Atualizar o PRD e o roadmap para refletir que agenda, horários públicos e contato via WhatsApp já foram implementados.
 - Integrar a branch do módulo em `develop` após a validação.
 
