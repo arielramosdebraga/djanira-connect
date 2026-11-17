@@ -37,3 +37,16 @@ export async function createAttendanceAction(formData: FormData) {
   revalidatePath("/inicio");
   redirect("/atendimentos?resultado=criado");
 }
+
+export async function cancelAttendanceAction(formData: FormData) {
+  const { membership, supabase } = await requireActiveMember();
+  if (membership.role !== "admin") redirect("/atendimentos?erro=sem-permissao");
+  const attendanceId = String(formData.get("attendanceId") ?? "");
+  if (!attendanceId) redirect("/atendimentos?erro=atendimento-invalido");
+  const { error } = await supabase.rpc("cancel_attendance", { p_attendance_id: attendanceId });
+  if (error) redirect(`/atendimentos?erro=${encodeURIComponent(error.message.includes("permissão") ? error.message : "Não foi possível cancelar o atendimento.")}`);
+  revalidatePath("/atendimentos");
+  revalidatePath("/retornos");
+  revalidatePath("/inicio");
+  redirect("/atendimentos?resultado=cancelado");
+}
