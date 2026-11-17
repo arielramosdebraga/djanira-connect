@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 import SearchableSelect from "@/components/forms/searchable-select";
 import MaskedDateInput from "@/components/forms/masked-date-input";
+import { createClient } from "@/lib/supabase/browser";
 
 function formatPhoneInput(value: string) {
   const digits = value.replace(/\D/g, "").slice(0, 11);
@@ -37,15 +38,29 @@ export default function ReservationForm({ action, services }: ReservationFormPro
   const [phone, setPhone] = useState("");
   const [reservationDate, setReservationDate] = useState("");
   const [reservationTime, setReservationTime] = useState("");
-  const timeOptions = Array.from({ length: 41 }, (_, index) => {
-    const hours = String(8 + Math.floor(index / 4)).padStart(2, "0");
-    const minutes = String((index % 4) * 15).padStart(2, "0");
-    return `${hours}:${minutes}`;
-  });
+  const [serviceId, setServiceId] = useState("");
+  const [availableTimes, setAvailableTimes] = useState<string[]>([]);
+  const [loadingTimes, setLoadingTimes] = useState(false);
 
   useEffect(() => {
     setIdempotencyKey(crypto.randomUUID());
   }, []);
+
+  useEffect(() => {
+    setReservationTime("");
+    if (!serviceId || !reservationDate) {
+      setAvailableTimes([]);
+      return;
+    }
+    let cancelled = false;
+    setLoadingTimes(true);
+    createClient().rpc("get_public_reservation_slots", { p_service_id: serviceId, p_date: reservationDate }).then(({ data, error }) => {
+      if (cancelled) return;
+      setAvailableTimes(error ? [] : (data ?? []).map((slot: { slot_time: string }) => slot.slot_time.slice(0, 5)));
+      setLoadingTimes(false);
+    });
+    return () => { cancelled = true; };
+  }, [reservationDate, serviceId]);
 
   return (
     <form className="mt-8 space-y-5" action={action}>
@@ -57,6 +72,7 @@ export default function ReservationForm({ action, services }: ReservationFormPro
           name="serviceId"
           placeholder="Pesquise por serviço"
           required
+          onValueChange={setServiceId}
           options={services.map((service) => ({ value: service.service_id, label: `${service.service_name} · ${service.duration_minutes} min` }))}
         />
       </label>
@@ -79,11 +95,11 @@ export default function ReservationForm({ action, services }: ReservationFormPro
 
         <label className="block text-sm font-medium">
           Horário (24h)
-          <SearchableSelect name="reservationTime" placeholder="Pesquise ou selecione o horário" required options={timeOptions.map((time) => ({ value: time, label: time }))} onValueChange={setReservationTime} />
+          {loadingTimes ? <p className="mt-2 rounded-xl bg-[#faf5f7] px-4 py-3 text-sm text-[#716963]">Buscando horários livres...</p> : availableTimes.length ? <SearchableSelect key={`${serviceId}-${reservationDate}`} name="reservationTime" placeholder="Pesquise ou selecione o horário" required options={availableTimes.map((time) => ({ value: time, label: time }))} onValueChange={setReservationTime} /> : <p className="mt-2 rounded-xl bg-[#faf5f7] px-4 py-3 text-sm text-[#69344b]">Selecione o serviço e a data para ver horários livres.</p>}
         </label>
       </div>
 
-      <span className="-mt-2 block text-xs font-normal text-[#716963]">A data abre o calendário ao focar. O horário usa o padrão de 24 horas.</span>
+      <span className="-mt-2 block text-xs font-normal text-[#716963]">Os horários ocupados e dias sem expediente não aparecem na lista.</span>
 
       <SubmitButton />
     </form>
