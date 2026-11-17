@@ -15,6 +15,9 @@ export async function createPublicReservationAction(formData: FormData) {
   let phone: string; let startsAt: string;
   try { phone = normalizePhone(phoneInput); startsAt = parseSalonDateTime(startsAtInput); } catch { redirect("/reservar?erro=confira-os-dados"); }
   const { error } = await (await createClient()).rpc("create_public_reservation", { p_service_id: serviceId, p_customer_name: name, p_phone_normalized: phone, p_starts_at: startsAt, p_idempotency_key: idempotencyKey });
-  if (error) redirect(`/reservar?erro=${encodeURIComponent(error.message.includes("Horário") || error.message.includes("horário") ? error.message : "Não foi possível reservar esse horário.")}`);
+  if (error) {
+    const knownError = error.message.includes("Horário") || error.message.includes("horário") || error.message.includes("Limite diário");
+    redirect(`/reservar?erro=${encodeURIComponent(knownError ? error.message : "Não foi possível reservar esse horário.")}`);
+  }
   redirect("/reservar?resultado=reservado");
 }
