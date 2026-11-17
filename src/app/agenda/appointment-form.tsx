@@ -1,7 +1,84 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
+import SearchableSelect from "@/components/forms/searchable-select";
+import { formatPhone } from "@/domains/contacts/phone";
 
-function SubmitButton() { const { pending } = useFormStatus(); return <button className="w-full rounded-xl bg-[#8f4e68] px-5 py-3.5 font-semibold text-white hover:bg-[#69344b] disabled:opacity-60" disabled={pending} type="submit">{pending ? "Salvando..." : "Agendar compromisso"}</button>; }
-export default function AppointmentForm({ action, customers, services }: { action: (formData: FormData) => void | Promise<void>; customers: Array<{ id: string; name: string }>; services: Array<{ id: string; name: string }> }) { const [idempotencyKey] = useState(() => crypto.randomUUID()); return <form className="mt-6 space-y-4" action={action}><input type="hidden" name="idempotencyKey" value={idempotencyKey} /><label className="block text-sm font-medium">Cliente<select className="mt-2 w-full rounded-xl border border-[#d9cec8] bg-white px-4 py-3 focus:border-[#8f4e68] focus:outline-none" name="customerId" defaultValue="" required><option value="" disabled>Selecione um cliente</option>{customers.map((customer) => <option key={customer.id} value={customer.id}>{customer.name}</option>)}</select></label><label className="block text-sm font-medium">Serviço<select className="mt-2 w-full rounded-xl border border-[#d9cec8] bg-white px-4 py-3 focus:border-[#8f4e68] focus:outline-none" name="serviceId" defaultValue="" required><option value="" disabled>Selecione um serviço</option>{services.map((service) => <option key={service.id} value={service.id}>{service.name}</option>)}</select></label><label className="block text-sm font-medium">Data e horário<input className="mt-2 w-full rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none" name="startsAt" type="datetime-local" required /></label><label className="block text-sm font-medium">Observações<textarea className="mt-2 min-h-20 w-full rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none" name="notes" maxLength={500} /></label><SubmitButton /></form>; }
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return <button className="w-full rounded-xl bg-[#8f4e68] px-5 py-3.5 font-semibold text-white hover:bg-[#69344b] disabled:opacity-60" disabled={pending} type="submit">{pending ? "Salvando..." : "Agendar compromisso"}</button>;
+}
+
+type AppointmentFormProps = {
+  action: (formData: FormData) => void | Promise<void>;
+  customers: Array<{ id: string; name: string; phone_normalized: string }>;
+  services: Array<{ id: string; name: string }>;
+};
+
+export default function AppointmentForm({ action, customers, services }: AppointmentFormProps) {
+  const [idempotencyKey, setIdempotencyKey] = useState("");
+  const [reservationDate, setReservationDate] = useState("");
+  const [reservationTime, setReservationTime] = useState("");
+  const datePickerRef = useRef<HTMLInputElement>(null);
+  const timeOptions = Array.from({ length: 96 }, (_, index) => {
+    const hours = String(Math.floor(index / 4)).padStart(2, "0");
+    const minutes = String((index % 4) * 15).padStart(2, "0");
+    return `${hours}:${minutes}`;
+  });
+
+  useEffect(() => {
+    setIdempotencyKey(crypto.randomUUID());
+  }, []);
+
+  return (
+    <form className="mt-6 space-y-4" action={action}>
+      <input type="hidden" name="idempotencyKey" value={idempotencyKey} />
+      <label className="block text-sm font-medium">
+        Cliente
+        <SearchableSelect
+          name="customerId"
+          placeholder="Pesquise por nome ou telefone"
+          required
+          options={customers.map((customer) => ({ value: customer.id, label: `${customer.name} — ${formatPhone(customer.phone_normalized)}` }))}
+        />
+        <span className="mt-2 block text-xs font-normal text-[#716963]">Digite o nome ou o número para encontrar o cliente.</span>
+      </label>
+      <label className="block text-sm font-medium">Serviço<SearchableSelect name="serviceId" placeholder="Pesquise por serviço" required options={services.map((service) => ({ value: service.id, label: service.name }))} /></label>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <label className="block text-sm font-medium">
+          Data desejada
+          <input
+            ref={datePickerRef}
+            className="mt-2 w-full cursor-pointer rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none"
+            name="appointmentDate"
+            type="date"
+            lang="pt-BR"
+            required
+            value={reservationDate}
+            onChange={(event) => setReservationDate(event.target.value)}
+            onFocus={() => {
+              const picker = datePickerRef.current;
+              if (!picker || !("showPicker" in picker)) return;
+              try {
+                (picker as HTMLInputElement & { showPicker: () => void }).showPicker();
+              } catch {
+                // O navegador já abriu o calendário no foco.
+              }
+            }}
+          />
+        </label>
+
+        <label className="block text-sm font-medium">
+          Horário (24h)
+          <SearchableSelect name="appointmentTime" placeholder="Pesquise ou selecione o horário" required options={timeOptions.map((time) => ({ value: time, label: time }))} onValueChange={setReservationTime} />
+        </label>
+      </div>
+      <span className="-mt-2 block text-xs font-normal text-[#716963]">A data abre o calendário ao focar. O horário usa o padrão de 24 horas.</span>
+      <input type="hidden" name="startsAt" value={reservationDate && reservationTime ? `${reservationDate}T${reservationTime}` : ""} />
+      <label className="block text-sm font-medium">Observações<textarea className="mt-2 min-h-20 w-full rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none" name="notes" maxLength={500} /></label>
+      <SubmitButton />
+    </form>
+  );
+}

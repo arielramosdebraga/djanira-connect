@@ -14,7 +14,7 @@ export default async function AgendaPage({ searchParams }: AgendaPageProps) {
   const params = await searchParams;
   const [{ data: rules }, { data: customers }, { data: services }, { data: appointments }] = await Promise.all([
     supabase.from("availability_rules").select("weekday, start_time, end_time, break_start, break_end, active").eq("organization_id", membership.organization_id).order("weekday"),
-    supabase.from("customers").select("id, name").eq("organization_id", membership.organization_id).eq("status", "active").order("name"),
+    supabase.from("customers").select("id, name, phone_normalized").eq("organization_id", membership.organization_id).eq("status", "active").order("name"),
     supabase.from("services").select("id, name").eq("organization_id", membership.organization_id).eq("active", true).order("name"),
     supabase.from("appointments").select("id, starts_at, ends_at, status, customers(name), services(name)").eq("organization_id", membership.organization_id).order("starts_at").limit(30),
   ]);

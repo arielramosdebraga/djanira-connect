@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
+import SearchableSelect from "@/components/forms/searchable-select";
 
 function formatPhoneInput(value: string) {
   const digits = value.replace(/\D/g, "").slice(0, 11);
@@ -52,14 +53,12 @@ export default function ReservationForm({ action, services }: ReservationFormPro
 
       <label className="block text-sm font-medium">
         Serviço
-        <select className="mt-2 w-full rounded-xl border border-[#d9cec8] bg-white px-4 py-3 focus:border-[#8f4e68] focus:outline-none" name="serviceId" defaultValue="" required>
-          <option value="" disabled>Selecione um serviço</option>
-          {services.map((service) => (
-            <option key={service.service_id} value={service.service_id}>
-              {service.service_name} · {service.duration_minutes} min
-            </option>
-          ))}
-        </select>
+        <SearchableSelect
+          name="serviceId"
+          placeholder="Pesquise por serviço"
+          required
+          options={services.map((service) => ({ value: service.service_id, label: `${service.service_name} · ${service.duration_minutes} min` }))}
+        />
       </label>
 
       <label className="block text-sm font-medium">
@@ -98,32 +97,11 @@ export default function ReservationForm({ action, services }: ReservationFormPro
 
         <label className="block text-sm font-medium">
           Horário (24h)
-          <select
-            className="mt-2 w-full rounded-xl border border-[#d9cec8] bg-white px-4 py-3 focus:border-[#8f4e68] focus:outline-none"
-            name="reservationTime"
-            required
-            value={reservationTime}
-            onChange={(event) => setReservationTime(event.target.value)}
-          >
-            <option value="" disabled>Selecione o horário</option>
-            {timeOptions.map((time) => <option key={time} value={time}>{time}</option>)}
-          </select>
+          <SearchableSelect name="reservationTime" placeholder="Pesquise ou selecione o horário" required options={timeOptions.map((time) => ({ value: time, label: time }))} onValueChange={setReservationTime} />
         </label>
       </div>
 
       <span className="-mt-2 block text-xs font-normal text-[#716963]">A data abre o calendário ao focar. O horário usa o padrão de 24 horas.</span>
-
-      <input
-        type="hidden"
-        name="startsAt"
-        value={reservationDate && reservationTime ? `${reservationDate}T${reservationTime}` : ""}
-      />
-
-      <input
-        type="hidden"
-        name="startsAt"
-        value={reservationDate && reservationTime ? `${reservationDate}T${reservationTime}` : ""}
-      />
 
       <SubmitButton />
     </form>

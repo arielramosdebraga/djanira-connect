@@ -12,7 +12,7 @@ export default async function AttendancesPage({ searchParams }: AttendancesPageP
   const { membership, supabase } = await requireActiveMember();
   const params = await searchParams;
   const [{ data: customers }, { data: services }, { data: attendances, error }] = await Promise.all([
-    supabase.from("customers").select("id, name").eq("organization_id", membership.organization_id).eq("status", "active").order("name"),
+    supabase.from("customers").select("id, name, phone_normalized").eq("organization_id", membership.organization_id).eq("status", "active").order("name"),
     supabase.from("services").select("id, name, average_price_cents").eq("organization_id", membership.organization_id).eq("active", true).order("name"),
     supabase.from("attendances").select("id, performed_at, service_name_snapshot, price_cents, status, customers(name)").eq("organization_id", membership.organization_id).order("performed_at", { ascending: false }).limit(20),
   ]);
