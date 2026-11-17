@@ -18,7 +18,11 @@ export async function createAppointmentAction(formData: FormData) {
   let startsAt: string;
   try { startsAt = parseSalonDateTime(startsAtInput); } catch { redirect(`${returnTo}?erro=data-invalida`); }
   const { error } = await supabase.rpc("create_appointment", { p_organization_id: membership.organization_id, p_customer_id: customerId, p_service_id: serviceId, p_starts_at: startsAt, p_notes: notes || null, p_idempotency_key: idempotencyKey });
-  if (error) redirect(`${returnTo}?erro=${encodeURIComponent(error.message.includes("horário") || error.message.includes("atendimento") || error.message.includes("Serviço") || error.message.includes("Contato") ? error.message : "Não foi possível criar o compromisso.")}`);
+  if (error) {
+    console.error("Falha ao criar compromisso", { code: error.code, message: error.message, details: error.details, hint: error.hint });
+    const knownError = /acesso|organização|serviço|contato|atendimento|horário|compromisso|permissão|período|reservado|inválido|duplic/i.test(error.message);
+    redirect(`${returnTo}?erro=${encodeURIComponent(knownError ? error.message : "Não foi possível criar o compromisso. Consulte o log do servidor para mais detalhes.")}`);
+  }
   revalidatePath("/agenda");
   redirect(`${returnTo}?resultado=compromisso-criado`);
 }
