@@ -2,6 +2,21 @@
 
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
+import CurrencyInput from "@/components/forms/currency-input";
+import SearchableSelect from "@/components/forms/searchable-select";
+
+function formatDuration(minutes: number) {
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  if (!hours) return `${minutes} min`;
+  if (!remainingMinutes) return `${hours} ${hours === 1 ? "hora" : "horas"}`;
+  return `${hours} ${hours === 1 ? "hora" : "horas"} ${remainingMinutes} min`;
+}
+
+const durationOptions = Array.from({ length: 16 }, (_, index) => {
+  const minutes = (index + 1) * 15;
+  return { value: String(minutes), label: formatDuration(minutes) };
+});
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -20,7 +35,7 @@ export default function ServiceModal({ action }: { action: (formData: FormData) 
           <button className="rounded-lg px-3 py-2 text-xl text-[#716963] hover:bg-[#f8f7f4]" type="button" aria-label="Fechar" onClick={() => setOpen(false)}>×</button>
         </div>
         <div className="modal-scrollbar max-h-[calc(92vh-10rem)] overflow-y-auto px-6 pb-6 sm:px-8 sm:pb-8">
-          <form className="pt-5 space-y-4" action={action}><label className="block text-sm font-medium">Nome<input className="mt-2 w-full rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none" name="name" required data-validation-message="Informe o nome do serviço." /></label><label className="block text-sm font-medium">Valor médio<input className="mt-2 w-full rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none" name="averagePrice" inputMode="decimal" placeholder="Ex.: 80,00" /></label><label className="block text-sm font-medium">Duração média (minutos)<input className="mt-2 w-full rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none" name="durationMinutes" type="number" min="1" required data-validation-message="Informe a duração do serviço." /></label><label className="block text-sm font-medium">Prazo de retorno (dias)<input className="mt-2 w-full rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none" name="returnPeriodDays" type="number" min="1" /></label><SubmitButton /></form>
+          <form className="pt-5 space-y-4" action={action}><label className="block text-sm font-medium">Nome<input className="mt-2 w-full rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none" name="name" required data-validation-message="Informe o nome do serviço." /></label><label className="block text-sm font-medium">Valor médio<CurrencyInput name="averagePrice" /></label><label className="block text-sm font-medium"><span className="block">Duração média</span><SearchableSelect name="durationMinutes" placeholder="Selecione a duração" required options={durationOptions} /></label><label className="block text-sm font-medium">Prazo de retorno (dias)<input className="mt-2 w-full rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none" name="returnPeriodDays" type="number" min="1" /></label><SubmitButton /></form>
         </div>
       </section>
     </div> : null}
