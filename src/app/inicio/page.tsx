@@ -1,18 +1,11 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { requireActiveMember } from "@/lib/auth/session";
 
 export const metadata = { title: "Início" };
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
-  try {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) redirect("/login");
-  } catch {
-    redirect("/login?erro=configuracao-indisponivel");
-  }
+  await requireActiveMember();
 
   return (
     <main className="min-h-screen bg-[#f8f7f4] px-6 py-8 text-[#29231f] sm:px-10">
