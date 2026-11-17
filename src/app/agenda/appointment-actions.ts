@@ -14,9 +14,9 @@ export async function createAppointmentAction(formData: FormData) {
   const idempotencyKey = String(formData.get("idempotencyKey") ?? "");
   const notes = String(formData.get("notes") ?? "");
   const returnTo = formData.get("returnTo") === "/inicio" ? "/inicio" : "/agenda";
-  if (!customerId || !serviceId || !idempotencyKey) redirect(`${returnTo}?erro=preencha-os-dados`);
+  if (!customerId || !serviceId || !idempotencyKey) redirect(`${returnTo}?erro=Preencha cliente, serviço, data e horário.`);
   let startsAt: string;
-  try { startsAt = parseSalonDateTime(startsAtInput); } catch { redirect(`${returnTo}?erro=data-invalida`); }
+  try { startsAt = parseSalonDateTime(startsAtInput); } catch { redirect(`${returnTo}?erro=Informe uma data e horário válidos.`); }
   const { error } = await supabase.rpc("create_appointment", { p_organization_id: membership.organization_id, p_customer_id: customerId, p_service_id: serviceId, p_starts_at: startsAt, p_notes: notes || null, p_idempotency_key: idempotencyKey });
   if (error) {
     console.error("Falha ao criar compromisso", { code: error.code, message: error.message, details: error.details, hint: error.hint });
