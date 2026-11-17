@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useState } from "react";
 
 type SearchableOption = { value: string; label: string };
 
@@ -14,28 +14,35 @@ type SearchableSelectProps = {
 };
 
 export default function SearchableSelect({ name, placeholder, options, required = false, defaultValue = "", onValueChange }: SearchableSelectProps) {
-  const listId = useId();
   const [query, setQuery] = useState(options.find((option) => option.value === defaultValue)?.label ?? "");
+  const [open, setOpen] = useState(false);
   const selectedOption = options.find((option) => option.label === query);
+  const filteredOptions = options.filter((option) => option.label.toLowerCase().includes(query.trim().toLowerCase()));
+  const selectOption = (option: SearchableOption) => {
+    setQuery(option.label);
+    setOpen(false);
+    onValueChange?.(option.value);
+  };
 
   return (
-    <>
+    <div className="relative">
       <input
         className="mt-2 w-full rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none"
-        list={listId}
         placeholder={placeholder}
         required={required}
         value={query}
+        aria-expanded={open}
+        onFocus={() => setOpen(true)}
+        onBlur={() => window.setTimeout(() => setOpen(false), 120)}
         onChange={(event) => {
           const value = event.target.value;
           setQuery(value);
+          setOpen(true);
           onValueChange?.(options.find((option) => option.label === value)?.value ?? "");
         }}
       />
-      <datalist id={listId}>
-        {options.map((option) => <option key={option.value} value={option.label} />)}
-      </datalist>
+      {open ? <div className="absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-xl border border-[#d9cec8] bg-white p-1 shadow-lg">{filteredOptions.length ? filteredOptions.map((option) => <button className="block w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-[#faf5f7]" key={option.value} type="button" onMouseDown={(event) => { event.preventDefault(); selectOption(option); }}>{option.label}</button>) : <p className="px-3 py-2 text-sm text-[#716963]">Nenhuma opção encontrada.</p>}</div> : null}
       <input type="hidden" name={name} value={selectedOption?.value ?? ""} />
-    </>
+    </div>
   );
 }
