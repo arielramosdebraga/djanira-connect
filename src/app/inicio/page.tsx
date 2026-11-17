@@ -2,7 +2,6 @@ import Link from "next/link";
 import { requireActiveMember } from "@/lib/auth/session";
 
 export const metadata = { title: "Início" };
-export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
   await requireActiveMember();

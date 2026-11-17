@@ -10,7 +10,6 @@ function formatPrice(cents: number | null) {
 }
 
 export const metadata = { title: "Serviços" };
-export const dynamic = "force-dynamic";
 
 export default async function ServicesPage({ searchParams }: ServicesPageProps) {
   const { membership, supabase } = await requireActiveMember();
