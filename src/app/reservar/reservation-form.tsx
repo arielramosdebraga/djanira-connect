@@ -62,9 +62,12 @@ export default function ReservationForm({ action, services }: ReservationFormPro
     return () => { cancelled = true; };
   }, [reservationDate, serviceId]);
 
+  const startsAt = reservationDate && reservationTime ? `${reservationDate}T${reservationTime}` : "";
+
   return (
     <form className="mt-8 space-y-5" action={action}>
       <input type="hidden" name="idempotencyKey" value={idempotencyKey} />
+      <input type="hidden" name="startsAt" value={startsAt} />
 
       <label className="block text-sm font-medium">
         Serviço
