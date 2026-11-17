@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 
 function formatPhoneInput(value: string) {
@@ -31,6 +31,12 @@ function formatDateTimeInput(value: string) {
   return formatted;
 }
 
+function formatNativeDateTime(value: string) {
+  const match = value.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/);
+  if (!match) return "";
+  return `${match[3]}/${match[2]}/${match[1]} ${match[4]}:${match[5]}`;
+}
+
 function SubmitButton() {
   const { pending } = useFormStatus();
 
@@ -50,6 +56,7 @@ export default function ReservationForm({ action, services }: ReservationFormPro
   const [idempotencyKey] = useState(() => crypto.randomUUID());
   const [phone, setPhone] = useState("");
   const [reservationDateTime, setReservationDateTime] = useState("");
+  const dateTimePickerRef = useRef<HTMLInputElement>(null);
 
   return (
     <form className="mt-8 space-y-5" action={action}>
@@ -92,6 +99,30 @@ export default function ReservationForm({ action, services }: ReservationFormPro
           onChange={(event) => setReservationDateTime(formatDateTimeInput(event.target.value))}
         />
         <span className="mt-2 block text-xs font-normal text-[#716963]">Use o formato dia/mês/ano e horário de 24 horas.</span>
+        <button
+          className="mt-3 rounded-lg border border-[#d9cec8] px-3 py-2 text-sm font-semibold text-[#69344b] hover:border-[#8f4e68]"
+          type="button"
+          onClick={() => {
+            const picker = dateTimePickerRef.current;
+            if (!picker) return;
+            if ("showPicker" in picker) {
+              (picker as HTMLInputElement & { showPicker: () => void }).showPicker();
+            } else {
+              picker.focus();
+            }
+          }}
+        >
+          Escolher no calendário
+        </button>
+        <input
+          ref={dateTimePickerRef}
+          className="pointer-events-none absolute h-px w-px opacity-0"
+          type="datetime-local"
+          lang="pt-BR"
+          tabIndex={-1}
+          aria-hidden="true"
+          onChange={(event) => setReservationDateTime(formatNativeDateTime(event.target.value))}
+        />
       </label>
 
       <input
