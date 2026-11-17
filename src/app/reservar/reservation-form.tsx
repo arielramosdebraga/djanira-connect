@@ -15,6 +15,22 @@ function formatPhoneInput(value: string) {
   return `(${areaCode}) ${number.slice(0, 5)}-${number.slice(5)}`;
 }
 
+function formatDateTimeInput(value: string) {
+  const digits = value.replace(/\D/g, "").slice(0, 12);
+  const day = digits.slice(0, 2);
+  const month = digits.slice(2, 4);
+  const year = digits.slice(4, 8);
+  const hour = digits.slice(8, 10);
+  const minute = digits.slice(10, 12);
+
+  let formatted = day;
+  if (month) formatted += `/${month}`;
+  if (year) formatted += `/${year}`;
+  if (hour) formatted += ` ${hour}`;
+  if (minute) formatted += `:${minute}`;
+  return formatted;
+}
+
 function SubmitButton() {
   const { pending } = useFormStatus();
 
@@ -33,8 +49,7 @@ type ReservationFormProps = {
 export default function ReservationForm({ action, services }: ReservationFormProps) {
   const [idempotencyKey] = useState(() => crypto.randomUUID());
   const [phone, setPhone] = useState("");
-  const [reservationDate, setReservationDate] = useState("");
-  const [reservationTime, setReservationTime] = useState("");
+  const [reservationDateTime, setReservationDateTime] = useState("");
 
   return (
     <form className="mt-8 space-y-5" action={action}>
@@ -62,48 +77,30 @@ export default function ReservationForm({ action, services }: ReservationFormPro
         <input className="mt-2 w-full rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none" name="phone" inputMode="tel" maxLength={15} placeholder="(11) 99999-9999" required value={phone} onChange={(event) => setPhone(formatPhoneInput(event.target.value))} />
       </label>
 
-      <div className="grid gap-5 sm:grid-cols-2">
-        <label className="block text-sm font-medium">
-          Data desejada
-          <input
-            className="mt-2 w-full cursor-pointer rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none"
-            name="reservationDate"
-            type="date"
-            lang="pt-BR"
-            required
-            value={reservationDate}
-            onChange={(event) => setReservationDate(event.target.value)}
-            onClick={(event) => {
-              const input = event.currentTarget;
-              if ("showPicker" in input) {
-                (input as HTMLInputElement & { showPicker: () => void }).showPicker();
-              }
-            }}
-          />
-        </label>
+      <label className="block text-sm font-medium">
+        Data e horário desejados
+        <input
+          className="mt-2 w-full rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none"
+          name="reservationDateTime"
+          inputMode="numeric"
+          autoComplete="off"
+          maxLength={16}
+          pattern="[0-9]{2}/[0-9]{2}/[0-9]{4} [0-9]{2}:[0-9]{2}"
+          placeholder="DD/MM/AAAA HH:MM"
+          required
+          value={reservationDateTime}
+          onChange={(event) => setReservationDateTime(formatDateTimeInput(event.target.value))}
+        />
+        <span className="mt-2 block text-xs font-normal text-[#716963]">Use o formato dia/mês/ano e horário de 24 horas.</span>
+      </label>
 
-        <label className="block text-sm font-medium">
-          Horário (24h)
-          <input
-            className="mt-2 w-full cursor-pointer rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none"
-            name="reservationTime"
-            type="time"
-            lang="pt-BR"
-            step={900}
-            required
-            value={reservationTime}
-            onChange={(event) => setReservationTime(event.target.value)}
-            onClick={(event) => {
-              const input = event.currentTarget;
-              if ("showPicker" in input) {
-                (input as HTMLInputElement & { showPicker: () => void }).showPicker();
-              }
-            }}
-          />
-        </label>
-      </div>
-
-      <input type="hidden" name="startsAt" value={reservationDate && reservationTime ? `${reservationDate}T${reservationTime}` : ""} />
+      <input
+        type="hidden"
+        name="startsAt"
+        value={reservationDateTime.length === 16
+          ? `${reservationDateTime.slice(6, 10)}-${reservationDateTime.slice(3, 5)}-${reservationDateTime.slice(0, 2)}T${reservationDateTime.slice(11, 16)}`
+          : ""}
+      />
 
       <SubmitButton />
     </form>
