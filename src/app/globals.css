@@ -23,6 +23,10 @@ body {
 
 * { box-sizing: border-box; }
 
+main a[href="/auth/logout"] {
+  display: none;
+}
+
 section[role="dialog"], .modal-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: #caa8b7 transparent;
