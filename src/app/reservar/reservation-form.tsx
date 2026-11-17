@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 import SearchableSelect from "@/components/forms/searchable-select";
 import MaskedDateInput from "@/components/forms/masked-date-input";
@@ -42,6 +42,7 @@ export default function ReservationForm({ action, services }: ReservationFormPro
   const [availableTimes, setAvailableTimes] = useState<string[]>([]);
   const [loadingTimes, setLoadingTimes] = useState(false);
   const [slotsError, setSlotsError] = useState(false);
+  const [formError, setFormError] = useState("");
 
   useEffect(() => {
     setIdempotencyKey(crypto.randomUUID());
@@ -68,10 +69,20 @@ export default function ReservationForm({ action, services }: ReservationFormPro
 
   const startsAt = reservationDate && reservationTime ? `${reservationDate}T${reservationTime}` : "";
 
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    if (!serviceId || !reservationDate || !reservationTime) {
+      event.preventDefault();
+      setFormError(!reservationDate ? "Informe a data desejada." : "Selecione um horário disponível.");
+      return;
+    }
+    setFormError("");
+  };
+
   return (
-    <form className="mt-8 space-y-5" action={action}>
+    <form className="mt-8 space-y-5" action={action} onSubmit={handleSubmit}>
       <input type="hidden" name="idempotencyKey" value={idempotencyKey} />
       <input type="hidden" name="startsAt" value={startsAt} />
+      {formError ? <p className="rounded-xl border border-[#f0caca] bg-[#fff1f1] p-4 text-sm text-[#9b3e3e]" role="alert">{formError}</p> : null}
 
       <label className="block text-sm font-medium">
         Serviço
@@ -79,7 +90,7 @@ export default function ReservationForm({ action, services }: ReservationFormPro
           name="serviceId"
           placeholder="Pesquise por serviço"
           required
-          onValueChange={setServiceId}
+          onValueChange={(value) => { setServiceId(value); setFormError(""); }}
           options={services.map((service) => ({ value: service.service_id, label: `${service.service_name} · ${service.duration_minutes} min` }))}
         />
       </label>
@@ -97,12 +108,12 @@ export default function ReservationForm({ action, services }: ReservationFormPro
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="block text-sm font-medium">
           Data desejada
-          <div className="mt-2"><MaskedDateInput value={reservationDate} onChange={setReservationDate} required /></div>
+          <div className="mt-2"><MaskedDateInput value={reservationDate} onChange={(value) => { setReservationDate(value); setFormError(""); }} required /></div>
         </label>
 
         <label className="block text-sm font-medium">
           Horário (24h)
-          {loadingTimes ? <p className="mt-2 rounded-xl bg-[#faf5f7] px-4 py-3 text-sm text-[#716963]">Buscando horários livres...</p> : slotsError ? <div className="mt-2 rounded-xl border border-[#f0caca] bg-[#fff1f1] px-4 py-3 text-sm text-[#9b3e3e]"><p className="font-semibold">Não foi possível consultar os horários.</p><p className="mt-1">Tente selecionar a data novamente.</p></div> : availableTimes.length ? <SearchableSelect key={`${serviceId}-${reservationDate}`} name="reservationTime" placeholder="Ex.: 09:00" required options={availableTimes.map((time) => ({ value: time, label: time }))} onValueChange={setReservationTime} /> : serviceId && reservationDate ? <div className="mt-2 rounded-xl border border-[#ead9df] bg-[#faf5f7] px-4 py-3 text-sm text-[#69344b]"><p className="font-semibold">Nenhum horário disponível</p><p className="mt-1">Escolha outra data para encontrar um horário livre.</p></div> : <p className="mt-2 rounded-xl bg-[#faf5f7] px-4 py-3 text-sm text-[#69344b]">Selecione o serviço e a data para ver horários livres.</p>}
+          {loadingTimes ? <p className="mt-2 rounded-xl bg-[#faf5f7] px-4 py-3 text-sm text-[#716963]">Buscando horários livres...</p> : slotsError ? <div className="mt-2 rounded-xl border border-[#f0caca] bg-[#fff1f1] px-4 py-3 text-sm text-[#9b3e3e]"><p className="font-semibold">Não foi possível consultar os horários.</p><p className="mt-1">Tente selecionar a data novamente.</p></div> : availableTimes.length ? <SearchableSelect key={`${serviceId}-${reservationDate}`} name="reservationTime" placeholder="Ex.: 09:00" required options={availableTimes.map((time) => ({ value: time, label: time }))} onValueChange={(value) => { setReservationTime(value); setFormError(""); }} /> : serviceId && reservationDate ? <div className="mt-2 rounded-xl border border-[#ead9df] bg-[#faf5f7] px-4 py-3 text-sm text-[#69344b]"><p className="font-semibold">Nenhum horário disponível</p><p className="mt-1">Escolha outra data para encontrar um horário livre.</p></div> : <p className="mt-2 rounded-xl bg-[#faf5f7] px-4 py-3 text-sm text-[#69344b]">Selecione o serviço e a data para ver horários livres.</p>}
         </label>
       </div>
 

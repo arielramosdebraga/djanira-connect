@@ -11,9 +11,9 @@ export async function createPublicReservationAction(formData: FormData) {
   const phoneInput = String(formData.get("phone") ?? "");
   const startsAtInput = String(formData.get("startsAt") ?? "");
   const idempotencyKey = String(formData.get("idempotencyKey") ?? "");
-  if (!serviceId || !name || !idempotencyKey) redirect("/reservar?erro=preencha-os-dados");
+  if (!serviceId || !name || !idempotencyKey) redirect(`/reservar?erro=${encodeURIComponent("Preencha nome, telefone, serviço, data e horário.")}`);
   let phone: string; let startsAt: string;
-  try { phone = normalizePhone(phoneInput); startsAt = parseSalonDateTime(startsAtInput); } catch { redirect("/reservar?erro=confira-os-dados"); }
+  try { phone = normalizePhone(phoneInput); startsAt = parseSalonDateTime(startsAtInput); } catch (error) { redirect(`/reservar?erro=${encodeURIComponent(error instanceof Error ? error.message : "Confira os dados informados.")}`); }
   const { error } = await (await createClient()).rpc("create_public_reservation", { p_service_id: serviceId, p_customer_name: name, p_phone_normalized: phone, p_starts_at: startsAt, p_idempotency_key: idempotencyKey });
   if (error) {
     const knownError = error.message.includes("Horário") || error.message.includes("horário") || error.message.includes("Limite diário");
