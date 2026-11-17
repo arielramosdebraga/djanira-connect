@@ -1,6 +1,11 @@
 -- Dados fictícios para facilitar a validação manual da aplicação.
 -- Esta migration é idempotente e usa apenas a primeira organização cadastrada.
-do $$
+create or replace function public.seed_demo_data()
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
 declare
   v_organization_id uuid;
   v_user_id uuid;
@@ -112,3 +117,5 @@ begin
   end if;
 end;
 $$;
+
+select public.seed_demo_data();
