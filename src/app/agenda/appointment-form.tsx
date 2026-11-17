@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 import SearchableSelect from "@/components/forms/searchable-select";
+import MaskedDateInput from "@/components/forms/masked-date-input";
 import { formatPhone } from "@/domains/contacts/phone";
 
 function SubmitButton() {
@@ -14,13 +15,13 @@ type AppointmentFormProps = {
   action: (formData: FormData) => void | Promise<void>;
   customers: Array<{ id: string; name: string; phone_normalized: string }>;
   services: Array<{ id: string; name: string }>;
+  returnTo?: "/agenda" | "/inicio";
 };
 
-export default function AppointmentForm({ action, customers, services }: AppointmentFormProps) {
+export default function AppointmentForm({ action, customers, services, returnTo = "/agenda" }: AppointmentFormProps) {
   const [idempotencyKey, setIdempotencyKey] = useState("");
   const [reservationDate, setReservationDate] = useState("");
   const [reservationTime, setReservationTime] = useState("");
-  const datePickerRef = useRef<HTMLInputElement>(null);
   const timeOptions = Array.from({ length: 41 }, (_, index) => {
     const hours = String(8 + Math.floor(index / 4)).padStart(2, "0");
     const minutes = String((index % 4) * 15).padStart(2, "0");
@@ -34,6 +35,7 @@ export default function AppointmentForm({ action, customers, services }: Appoint
   return (
     <form className="mt-6 space-y-4" action={action}>
       <input type="hidden" name="idempotencyKey" value={idempotencyKey} />
+      <input type="hidden" name="returnTo" value={returnTo} />
       <label className="block text-sm font-medium">
         Cliente
         <SearchableSelect
@@ -49,25 +51,7 @@ export default function AppointmentForm({ action, customers, services }: Appoint
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block text-sm font-medium">
           Data desejada
-          <input
-            ref={datePickerRef}
-            className="mt-2 w-full cursor-pointer rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none"
-            name="appointmentDate"
-            type="date"
-            lang="pt-BR"
-            required
-            value={reservationDate}
-            onChange={(event) => setReservationDate(event.target.value)}
-            onFocus={() => {
-              const picker = datePickerRef.current;
-              if (!picker || !("showPicker" in picker)) return;
-              try {
-                (picker as HTMLInputElement & { showPicker: () => void }).showPicker();
-              } catch {
-                // O navegador já abriu o calendário no foco.
-              }
-            }}
-          />
+          <MaskedDateInput value={reservationDate} onChange={setReservationDate} required />
         </label>
 
         <label className="block text-sm font-medium">

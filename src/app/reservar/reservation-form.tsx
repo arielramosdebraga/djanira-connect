@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 import SearchableSelect from "@/components/forms/searchable-select";
+import MaskedDateInput from "@/components/forms/masked-date-input";
 
 function formatPhoneInput(value: string) {
   const digits = value.replace(/\D/g, "").slice(0, 11);
@@ -36,7 +37,6 @@ export default function ReservationForm({ action, services }: ReservationFormPro
   const [phone, setPhone] = useState("");
   const [reservationDate, setReservationDate] = useState("");
   const [reservationTime, setReservationTime] = useState("");
-  const datePickerRef = useRef<HTMLInputElement>(null);
   const timeOptions = Array.from({ length: 41 }, (_, index) => {
     const hours = String(8 + Math.floor(index / 4)).padStart(2, "0");
     const minutes = String((index % 4) * 15).padStart(2, "0");
@@ -74,25 +74,7 @@ export default function ReservationForm({ action, services }: ReservationFormPro
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="block text-sm font-medium">
           Data desejada
-          <input
-            ref={datePickerRef}
-            className="mt-2 w-full cursor-pointer rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none"
-            name="reservationDate"
-            type="date"
-            lang="pt-BR"
-            required
-            value={reservationDate}
-            onChange={(event) => setReservationDate(event.target.value)}
-            onFocus={() => {
-              const picker = datePickerRef.current;
-              if (!picker || !("showPicker" in picker)) return;
-              try {
-                (picker as HTMLInputElement & { showPicker: () => void }).showPicker();
-              } catch {
-                // O navegador já abriu o calendário no foco.
-              }
-            }}
-          />
+          <MaskedDateInput value={reservationDate} onChange={setReservationDate} required />
         </label>
 
         <label className="block text-sm font-medium">

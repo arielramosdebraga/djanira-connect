@@ -13,13 +13,14 @@ export async function createAppointmentAction(formData: FormData) {
   const startsAtInput = String(formData.get("startsAt") ?? "");
   const idempotencyKey = String(formData.get("idempotencyKey") ?? "");
   const notes = String(formData.get("notes") ?? "");
-  if (!customerId || !serviceId || !idempotencyKey) redirect("/agenda?erro=preencha-os-dados");
+  const returnTo = formData.get("returnTo") === "/inicio" ? "/inicio" : "/agenda";
+  if (!customerId || !serviceId || !idempotencyKey) redirect(`${returnTo}?erro=preencha-os-dados`);
   let startsAt: string;
-  try { startsAt = parseSalonDateTime(startsAtInput); } catch { redirect("/agenda?erro=data-invalida"); }
+  try { startsAt = parseSalonDateTime(startsAtInput); } catch { redirect(`${returnTo}?erro=data-invalida`); }
   const { error } = await supabase.rpc("create_appointment", { p_organization_id: membership.organization_id, p_customer_id: customerId, p_service_id: serviceId, p_starts_at: startsAt, p_notes: notes || null, p_idempotency_key: idempotencyKey });
-  if (error) redirect(`/agenda?erro=${encodeURIComponent(error.message.includes("horário") || error.message.includes("atendimento") ? error.message : "Não foi possível criar o compromisso.")}`);
+  if (error) redirect(`${returnTo}?erro=${encodeURIComponent(error.message.includes("horário") || error.message.includes("atendimento") || error.message.includes("Serviço") || error.message.includes("Contato") ? error.message : "Não foi possível criar o compromisso.")}`);
   revalidatePath("/agenda");
-  redirect("/agenda?resultado=compromisso-criado");
+  redirect(`${returnTo}?resultado=compromisso-criado`);
 }
 
 export async function cancelAppointmentAction(formData: FormData) {
