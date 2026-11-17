@@ -12,9 +12,8 @@ export async function saveAvailabilityAction(formData: FormData) {
   if (membership.role !== "admin") redirect("/agenda?erro=sem-permissao");
   const rules = weekdays.flatMap((weekday) => {
     if (formData.get(`enabled_${weekday}`) !== "on") return [];
-    return [{ weekday, startTime: String(formData.get(`start_${weekday}`) ?? ""), endTime: String(formData.get(`end_${weekday}`) ?? ""), breakStart: String(formData.get(`break_start_${weekday}`) ?? ""), breakEnd: String(formData.get(`break_end_${weekday}`) ?? "") }];
+    return [{ weekday, startTime: "09:00", endTime: "18:00", breakStart: "", breakEnd: "" }];
   });
-  if (rules.some((rule) => !/^\d{2}:\d{2}$/.test(rule.startTime) || !/^\d{2}:\d{2}$/.test(rule.endTime))) redirect("/agenda?erro=horarios-invalidos");
   const { error } = await supabase.rpc("save_availability_rules", { p_organization_id: membership.organization_id, p_rules: rules });
   if (error) redirect("/agenda?erro=nao-foi-possivel-salvar");
   revalidatePath("/agenda");
