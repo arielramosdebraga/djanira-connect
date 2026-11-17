@@ -70,10 +70,11 @@ erros de migration.
 - [ ] Adicionar filtro de clientes que nunca receberam contato.
 - [ ] Exibir a data do último contato na lista e na ficha.
 - [ ] Adicionar paginação quando o volume ultrapassar o limite da tela.
+- [x] Exibir a data do último contato e o estado de nunca contatado.
 
 ### Atendimentos e retornos
 
-- [ ] Permitir correção de atendimento conforme o papel do usuário.
+- [x] Permitir correção de atendimento conforme o papel do usuário.
 - [ ] Revisar a reavaliação de retornos após cancelamento.
 - [ ] Exibir mensagens de erro específicas nas ações restantes.
 - [ ] Confirmar que clientes arquivados ou com restrição não entram na fila.
