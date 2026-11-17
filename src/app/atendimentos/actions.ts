@@ -59,7 +59,8 @@ export async function updateAttendanceAction(formData: FormData) {
   const serviceId = String(formData.get("serviceId") ?? "");
   const performedAtInput = String(formData.get("performedAt") ?? "");
   const priceInput = String(formData.get("price") ?? "").trim();
-  const price = priceInput ? Number(priceInput.replace(",", ".")) : null;
+  const normalizedPriceInput = priceInput.replace(/[^\d,.-]/g, "").replace(/\./g, "").replace(",", ".");
+  const price = normalizedPriceInput ? Number(normalizedPriceInput) : null;
   if (!attendanceId || !customerId || !serviceId || !performedAtInput || (price !== null && (!Number.isFinite(price) || price < 0))) redirect(`/atendimentos/${attendanceId}?erro=Confira os dados informados.`);
   let performedAt: string;
   try { performedAt = parseSalonDateTime(performedAtInput); } catch (error) { redirect(`/atendimentos/${attendanceId}?erro=${encodeURIComponent(error instanceof Error ? error.message : "Data inválida.")}`); }

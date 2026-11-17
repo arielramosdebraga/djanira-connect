@@ -6,7 +6,8 @@ export const attendanceInputSchema = z.object({
   performedAt: z.string().min(1, "Informe a data e o horário."),
   price: z.string().trim().optional().transform((value) => {
     if (!value) return null;
-    const parsed = Number(value.replace(",", "."));
+    const normalized = value.replace(/[^\d,.-]/g, "").replace(/\./g, "").replace(",", ".");
+    const parsed = Number(normalized);
     return Number.isFinite(parsed) ? Math.round(parsed * 100) : NaN;
   }).refine((value) => value === null || value >= 0, "Informe um valor válido."),
   notes: z.string().trim().max(500, "Use no máximo 500 caracteres.").optional(),
