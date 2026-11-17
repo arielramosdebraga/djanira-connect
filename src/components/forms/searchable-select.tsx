@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 type SearchableOption = { value: string; label: string };
 
@@ -16,17 +16,20 @@ type SearchableSelectProps = {
 export default function SearchableSelect({ name, placeholder, options, required = false, defaultValue = "", onValueChange }: SearchableSelectProps) {
   const [query, setQuery] = useState(options.find((option) => option.value === defaultValue)?.label ?? "");
   const [open, setOpen] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
   const selectedOption = options.find((option) => option.label === query);
   const filteredOptions = options.filter((option) => option.label.toLowerCase().includes(query.trim().toLowerCase()));
   const selectOption = (option: SearchableOption) => {
     setQuery(option.label);
     setOpen(false);
+    inputRef.current?.setCustomValidity("");
     onValueChange?.(option.value);
   };
 
   return (
     <div className="relative">
       <input
+        ref={inputRef}
         className="mt-2 w-full rounded-xl border border-[#d9cec8] px-4 py-3 focus:border-[#8f4e68] focus:outline-none"
         placeholder={placeholder}
         required={required}
@@ -39,6 +42,7 @@ export default function SearchableSelect({ name, placeholder, options, required 
           const value = event.target.value;
           setQuery(value);
           setOpen(true);
+          event.currentTarget.setCustomValidity("");
           onValueChange?.(options.find((option) => option.label === value)?.value ?? "");
         }}
       />
