@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { requireActiveMember } from "@/lib/auth/session";
 import DashboardCalendar from "@/app/inicio/dashboard-calendar";
 import DashboardAppointmentModal from "@/app/inicio/dashboard-appointment-modal";

@@ -5,6 +5,7 @@ export const serviceInputSchema = z.object({
   averagePrice: z.string().trim().optional().transform((value) => {
     if (!value) return null;
     const normalized = value.replace(/[^\d,.-]/g, "").replace(/\./g, "").replace(",", ".");
+    if (!normalized || normalized === "-" || normalized === ".") return NaN;
     const parsed = Number(normalized);
     return Number.isFinite(parsed) ? Math.round(parsed * 100) : NaN;
   }).refine((value) => value === null || value >= 0, "Informe um valor válido."),

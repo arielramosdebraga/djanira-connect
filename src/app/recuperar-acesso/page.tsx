@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import RecoveryForm from "./recovery-form";
 
 export const metadata = { title: "Recuperar acesso" };
+export const instant = false;
 
 export default function RecoverAccessPage() {
   return (

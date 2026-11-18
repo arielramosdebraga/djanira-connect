@@ -2,7 +2,6 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { requireActiveMember } from "@/lib/auth/session";
 
 const weekdays = [0, 1, 2, 3, 4, 5, 6];

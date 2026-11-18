@@ -2,7 +2,6 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { requireActiveMember } from "@/lib/auth/session";
 import { normalizePhone } from "@/domains/contacts/phone";
 
