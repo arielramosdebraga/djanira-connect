@@ -1,40 +1,12 @@
+import Image from "next/image";
 import Link from "next/link";
+import logoMark from "../../assets/djanira-mark-cropped.png";
+
+export const metadata = { title: "Djanira Montclair" };
 
 export default function HomePage() {
-  return (
-    <main className="min-h-screen bg-[#f8f7f4] px-6 py-8 text-[#29231f] sm:px-10">
-      <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-6xl flex-col justify-between">
-        <header className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#8f4e68]">Djanira Connect</p>
-            <p className="mt-1 text-sm text-[#716963]">Gestão simples para a rotina do salão</p>
-          </div>
-          <div className="flex items-center gap-3"><Link className="rounded-full border border-[#d9cec8] px-5 py-2.5 text-sm font-semibold transition hover:border-[#8f4e68] hover:text-[#8f4e68]" href="/reservar">Reservar</Link><Link className="rounded-full border border-[#d9cec8] px-5 py-2.5 text-sm font-semibold transition hover:border-[#8f4e68] hover:text-[#8f4e68]" href="/login">Entrar</Link></div>
-        </header>
-
-        <section className="grid gap-12 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-          <div>
-            <p className="mb-5 text-sm font-semibold uppercase tracking-[0.18em] text-[#8f4e68]">Organização no dia a dia</p>
-            <h1 className="max-w-2xl text-5xl font-semibold leading-[1.05] tracking-tight sm:text-7xl">Seus clientes e retornos no mesmo lugar.</h1>
-            <p className="mt-7 max-w-xl text-lg leading-8 text-[#716963]">Cadastre serviços, registre atendimentos e saiba quem precisa de um novo contato.</p>
-            <Link className="mt-9 inline-flex rounded-full bg-[#8f4e68] px-6 py-3.5 font-semibold text-white shadow-sm transition hover:bg-[#69344b]" href="/login">Acessar o sistema</Link>
-          </div>
-
-          <div className="rounded-[2rem] border border-[#e8e1dc] bg-white p-6 shadow-[0_24px_80px_rgba(91,55,37,0.08)] sm:p-8">
-            <div className="flex items-center justify-between border-b border-[#eee8e3] pb-5">
-              <div><p className="text-sm text-[#716963]">Visão geral</p><h2 className="mt-1 text-xl font-semibold">Acompanhe sua rotina</h2></div>
-              <span className="rounded-full bg-[#f7e9ef] px-3 py-1 text-xs font-semibold text-[#8f4e68]">Em preparação</span>
-            </div>
-            <div className="grid gap-3 py-6 sm:grid-cols-2">
-              <div className="rounded-2xl bg-[#faf5f7] p-5"><p className="text-sm text-[#716963]">Retornos de hoje</p><p className="mt-3 text-3xl font-semibold">—</p></div>
-              <div className="rounded-2xl bg-[#f8f7f4] p-5"><p className="text-sm text-[#716963]">Atendimentos</p><p className="mt-3 text-3xl font-semibold">—</p></div>
-            </div>
-            <p className="text-sm leading-6 text-[#716963]">A primeira versão está sendo construída para começar pelos serviços, contatos e retornos.</p>
-          </div>
-        </section>
-
-        <footer className="border-t border-[#e8e1dc] py-5 text-sm text-[#716963]">Acesso privado para a equipe do salão.</footer>
-      </div>
-    </main>
-  );
+  return <main className="min-h-screen overflow-hidden bg-[#f7f0e6] text-[#2c241d]"><div className="mx-auto flex min-h-screen max-w-7xl flex-col px-6 py-5 sm:px-10 lg:px-14"><header className="flex items-center justify-between"><Link className="flex items-center gap-3" href="/" aria-label="Djanira Montclair - início"><span className="flex size-14 items-center justify-center rounded-full bg-white shadow-[0_8px_30px_rgba(92,55,27,0.08)]"><Image src={logoMark} alt="" width={52} height={52} className="h-11 w-11 object-contain" priority /></span><span className="hidden text-sm font-semibold uppercase tracking-[0.18em] text-[#75401f] sm:inline">Djanira Montclair</span></Link><nav className="flex items-center gap-3" aria-label="Navegação principal"><Link className="rounded-full px-4 py-2.5 text-sm font-semibold text-[#76695c] transition hover:bg-white hover:text-[#a96532]" href="/login">Acesso da equipe</Link><Link className="rounded-full bg-[#a96532] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#75401f]" href="/reservar">Reservar horário</Link></nav></header>
+    <section className="grid flex-1 items-center gap-14 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:py-20"><div><p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#a96532]">Salão de beleza</p><h1 className="mt-5 max-w-3xl text-5xl font-semibold leading-[1.02] tracking-tight sm:text-7xl">Cuidado, beleza e atenção em cada detalhe.</h1><p className="mt-7 max-w-xl text-lg leading-8 text-[#76695c]">Agende seu horário com o Djanira Montclair e encontre uma experiência de beleza feita para você.</p><div className="mt-9 flex flex-wrap items-center gap-3"><Link className="rounded-full bg-[#a96532] px-6 py-3.5 font-semibold text-white shadow-[0_12px_30px_rgba(169,101,50,0.2)] transition hover:bg-[#75401f]" href="/reservar">Solicitar reserva</Link><Link className="rounded-full border border-[#d8c3a8] bg-white/60 px-6 py-3.5 font-semibold text-[#75401f] transition hover:border-[#a96532] hover:bg-white" href="/login">Entrar no sistema</Link></div><div className="mt-12 flex flex-wrap gap-x-8 gap-y-3 text-sm text-[#76695c]"><span>Atendimento personalizado</span><span>Horários organizados</span><span>Beleza com cuidado</span></div></div><div className="relative flex min-h-[420px] items-center justify-center"><div className="absolute inset-8 rounded-[3rem] bg-[#ead7b8]" /><div className="absolute right-2 top-3 size-24 rounded-full border border-[#c8923d]/40" /><div className="absolute bottom-4 left-3 size-16 rounded-full border border-[#c8923d]/40" /><div className="relative flex size-[min(78vw,390px)] items-center justify-center rounded-full border border-[#c8923d]/50 bg-[#f4e7d4] shadow-[0_30px_80px_rgba(92,55,27,0.14)]"><div className="flex size-[78%] items-center justify-center rounded-full border border-[#d8c3a8] bg-white/75"><Image src={logoMark} alt="Símbolo Djanira Montclair" width={280} height={280} className="h-auto w-[68%] object-contain" priority /></div></div></div></section>
+    <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[#e5d7c7] py-5 text-sm text-[#76695c]"><span>Djanira Montclair · Salão de beleza</span><span>Agendamentos pelo formulário de reservas</span></footer>
+  </div></main>;
 }
