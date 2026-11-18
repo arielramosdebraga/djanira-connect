@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type ReactNode, useState } from "react";
+import logoMark from "../../../assets/Imagem do ChatGPT 17 de nov. de 2026, 21_16_51.png";
 
 const navigation = [
   ["Início", "/inicio"],
@@ -22,7 +23,7 @@ function NavigationLinks({ pathname, onNavigate }: { pathname: string; onNavigat
   return <nav className="mt-8 space-y-1" aria-label="Navegação principal">{navigation.map(([label, href]) => { const active = pathname === href || pathname.startsWith(`${href}/`); return <Link key={href} href={href} onClick={onNavigate} className={`block rounded-xl px-4 py-3 text-sm font-semibold transition ${active ? "bg-[#faf0f4] text-[#8f4e68]" : "text-[#716963] hover:bg-[#faf5f7] hover:text-[#8f4e68]"}`}>{label}</Link>; })}</nav>;
 }
 
-function BrandMark({ compact = false }: { compact?: boolean }) { return <Image src="/brand/djanira-mark.png" alt="Djanira Connect" width={compact ? 56 : 88} height={compact ? 56 : 88} className={compact ? "h-14 w-14 object-contain" : "h-[5.5rem] w-[5.5rem] object-contain"} priority />; }
+function BrandMark({ compact = false }: { compact?: boolean }) { return <Image src={logoMark} alt="Djanira Connect" width={compact ? 56 : 88} height={compact ? 56 : 88} className={compact ? "h-14 w-14 object-contain" : "h-[5.5rem] w-[5.5rem] object-contain"} priority />; }
 
 export default function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
