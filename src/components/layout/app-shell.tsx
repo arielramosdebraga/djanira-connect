@@ -14,6 +14,7 @@ const navigation = [
   ["Relatórios", "/relatorios"],
   ["Retornos", "/retornos"],
   ["Serviços", "/servicos"],
+  ["Profissionais", "/configuracoes/profissionais"],
   ["Configurações", "/configuracoes"],
 ] as const;
 

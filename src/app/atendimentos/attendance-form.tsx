@@ -10,9 +10,11 @@ type AttendanceFormProps = {
   action: (formData: FormData) => void | Promise<void>;
   customers: Array<{ id: string; name: string; phone_normalized: string }>;
   services: Array<{ id: string; name: string; average_price_cents: number | null }>;
+  professionals?: Array<{ id: string; name: string; default_commission_rate: number }>;
   attendanceId?: string;
   initialCustomerId?: string;
   initialServiceId?: string;
+  initialProfessionalId?: string;
   initialDate?: string;
   initialTime?: string;
   initialPriceCents?: number | null;
@@ -20,7 +22,7 @@ type AttendanceFormProps = {
   submitLabel?: string;
 };
 
-export default function AttendanceForm({ action, customers, services, attendanceId, initialCustomerId = "", initialServiceId = "", initialDate = "", initialTime = "", initialPriceCents = null, initialNotes = "", submitLabel = "Registrar atendimento" }: AttendanceFormProps) {
+export default function AttendanceForm({ action, customers, services, professionals = [], attendanceId, initialCustomerId = "", initialServiceId = "", initialProfessionalId = "", initialDate = "", initialTime = "", initialPriceCents = null, initialNotes = "", submitLabel = "Registrar atendimento" }: AttendanceFormProps) {
   const [idempotencyKey, setIdempotencyKey] = useState("");
   useEffect(() => { setIdempotencyKey(crypto.randomUUID()); }, []);
 
@@ -34,6 +36,11 @@ export default function AttendanceForm({ action, customers, services, attendance
     <label className="block text-sm font-medium">
       <span className="block">Serviço</span>
       <SearchableSelect name="serviceId" placeholder="Pesquise por serviço" required defaultValue={initialServiceId} options={services.map((service) => ({ value: service.id, label: service.name }))} />
+    </label>
+    <label className="block text-sm font-medium">
+      <span className="block">Profissional responsável</span>
+      <SearchableSelect name="professionalId" placeholder="Selecione, se aplicável" defaultValue={initialProfessionalId} options={professionals.map((professional) => ({ value: professional.id, label: professional.name }))} />
+      <span className="mt-1 block text-xs font-normal text-[#716963]">Opcional para atendimentos antigos ou sem comissão.</span>
     </label>
     <DateTimeFields name="performedAt" initialDate={initialDate} initialTime={initialTime} />
     <label className="block text-sm font-medium">Valor praticado<CurrencyInput name="price" defaultValue={initialPriceCents === null ? "" : String(initialPriceCents)} /></label>

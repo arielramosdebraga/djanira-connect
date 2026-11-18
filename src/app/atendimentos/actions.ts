@@ -12,6 +12,7 @@ export async function createAttendanceAction(formData: FormData) {
   const parsed = attendanceInputSchema.safeParse({
     customerId: formData.get("customerId"),
     serviceId: formData.get("serviceId"),
+    professionalId: formData.get("professionalId") || undefined,
     performedAt: formData.get("performedAt"),
     price: formData.get("price"),
     notes: formData.get("notes") || undefined,
@@ -27,6 +28,7 @@ export async function createAttendanceAction(formData: FormData) {
     p_customer_id: parsed.data.customerId,
     p_service_id: parsed.data.serviceId,
     p_performed_at: performedAt,
+    p_professional_id: parsed.data.professionalId || null,
     p_price_cents: parsed.data.price,
     p_notes: parsed.data.notes || null,
     p_idempotency_key: parsed.data.idempotencyKey,
@@ -57,6 +59,7 @@ export async function updateAttendanceAction(formData: FormData) {
   const attendanceId = String(formData.get("attendanceId") ?? "");
   const customerId = String(formData.get("customerId") ?? "");
   const serviceId = String(formData.get("serviceId") ?? "");
+  const professionalId = String(formData.get("professionalId") ?? "").trim() || null;
   const performedAtInput = String(formData.get("performedAt") ?? "");
   const priceInput = String(formData.get("price") ?? "").trim();
   const normalizedPriceInput = priceInput.replace(/[^\d,.-]/g, "").replace(/\./g, "").replace(",", ".");
@@ -64,7 +67,7 @@ export async function updateAttendanceAction(formData: FormData) {
   if (!attendanceId || !customerId || !serviceId || !performedAtInput || (price !== null && (!Number.isFinite(price) || price < 0))) redirect(`/atendimentos/${attendanceId}?erro=Confira os dados informados.`);
   let performedAt: string;
   try { performedAt = parseSalonDateTime(performedAtInput); } catch (error) { redirect(`/atendimentos/${attendanceId}?erro=${encodeURIComponent(error instanceof Error ? error.message : "Data inválida.")}`); }
-  const { error } = await supabase.rpc("update_attendance", { p_attendance_id: attendanceId, p_customer_id: customerId, p_service_id: serviceId, p_performed_at: performedAt, p_price_cents: price === null ? null : Math.round(price * 100), p_notes: String(formData.get("notes") ?? "").trim() || null });
+  const { error } = await supabase.rpc("update_attendance", { p_attendance_id: attendanceId, p_customer_id: customerId, p_service_id: serviceId, p_performed_at: performedAt, p_professional_id: professionalId, p_price_cents: price === null ? null : Math.round(price * 100), p_notes: String(formData.get("notes") ?? "").trim() || null });
   if (error) redirect(`/atendimentos/${attendanceId}?erro=${encodeURIComponent(error.message.includes("permissão") ? error.message : "Não foi possível atualizar o atendimento.")}`);
   revalidatePath("/atendimentos"); revalidatePath(`/atendimentos/${attendanceId}`); revalidatePath("/retornos"); revalidatePath("/inicio");
   redirect(`/atendimentos/${attendanceId}?resultado=atualizado`);

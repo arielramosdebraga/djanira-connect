@@ -3,6 +3,7 @@ import { z } from "zod";
 export const attendanceInputSchema = z.object({
   customerId: z.string().uuid("Selecione um contato."),
   serviceId: z.string().uuid("Selecione um serviço."),
+  professionalId: z.string().uuid("Selecione um profissional válido.").optional().or(z.literal("")),
   performedAt: z.string().min(1, "Informe a data e o horário."),
   price: z.string().trim().optional().transform((value) => {
     if (!value) return null;
