@@ -59,6 +59,13 @@ body {
 
 * { box-sizing: border-box; }
 
+@media print {
+  body { background: #ffffff !important; }
+  .no-print { display: none !important; }
+  #report-content { max-width: none !important; padding: 0 !important; }
+  #report-content > section { break-inside: avoid; }
+}
+
 main a[href="/auth/logout"] {
   display: none;
 }
