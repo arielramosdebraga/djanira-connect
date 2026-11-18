@@ -34,7 +34,8 @@ export default function DashboardCalendar({ appointments }: { appointments: Cale
   const [viewDate, setViewDate] = useState<Date | null>(null);
 
   useEffect(() => {
-    setViewDate(new Date());
+    const timer = window.setTimeout(() => setViewDate(new Date()), 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
   const week = useMemo(() => {

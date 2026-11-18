@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent, useEffect, useState } from "react";
+import { type FormEvent, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import SearchableSelect from "@/components/forms/searchable-select";
 import MaskedDateInput from "@/components/forms/masked-date-input";
@@ -35,7 +35,7 @@ type ReservationFormProps = {
 };
 
 export default function ReservationForm({ action, services, returnTo = "/reservar" }: ReservationFormProps) {
-  const [idempotencyKey, setIdempotencyKey] = useState("");
+  const idempotencyInput = useRef<HTMLInputElement>(null);
   const [phone, setPhone] = useState("");
   const [reservationDate, setReservationDate] = useState("");
   const [reservationTime, setReservationTime] = useState("");
@@ -46,31 +46,28 @@ export default function ReservationForm({ action, services, returnTo = "/reserva
   const [formError, setFormError] = useState("");
 
   useEffect(() => {
-    setIdempotencyKey(crypto.randomUUID());
-  }, []);
-
-  useEffect(() => {
-    setReservationTime("");
     if (!serviceId || !reservationDate) {
-      setAvailableTimes([]);
-      setSlotsError(false);
-      return;
+      const timer = window.setTimeout(() => { setAvailableTimes([]); setSlotsError(false); setLoadingTimes(false); }, 0);
+      return () => window.clearTimeout(timer);
     }
     let cancelled = false;
-    setLoadingTimes(true);
-    setSlotsError(false);
-    createClient().rpc("get_public_reservation_slots", { p_service_id: serviceId, p_date: reservationDate }).then(({ data, error }) => {
-      if (cancelled) return;
-      setSlotsError(Boolean(error));
-      setAvailableTimes(error ? [] : (data ?? []).map((slot: { slot_time: string }) => slot.slot_time.slice(0, 5)));
-      setLoadingTimes(false);
-    });
-    return () => { cancelled = true; };
+    const timer = window.setTimeout(() => {
+      setLoadingTimes(true);
+      setSlotsError(false);
+      createClient().rpc("get_public_reservation_slots", { p_service_id: serviceId, p_date: reservationDate }).then(({ data, error }) => {
+        if (cancelled) return;
+        setSlotsError(Boolean(error));
+        setAvailableTimes(error ? [] : (data ?? []).map((slot: { slot_time: string }) => slot.slot_time.slice(0, 5)));
+        setLoadingTimes(false);
+      });
+    }, 0);
+    return () => { cancelled = true; window.clearTimeout(timer); };
   }, [reservationDate, serviceId]);
 
   const startsAt = reservationDate && reservationTime ? `${reservationDate}T${reservationTime}` : "";
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    if (idempotencyInput.current && !idempotencyInput.current.value) idempotencyInput.current.value = crypto.randomUUID();
     if (!serviceId || !reservationDate || !reservationTime) {
       event.preventDefault();
       setFormError(!reservationDate ? "Informe a data desejada." : "Selecione um horário disponível.");
@@ -81,7 +78,7 @@ export default function ReservationForm({ action, services, returnTo = "/reserva
 
   return (
     <form className="mt-8 space-y-5" action={action} onSubmit={handleSubmit}>
-      <input type="hidden" name="idempotencyKey" value={idempotencyKey} />
+      <input ref={idempotencyInput} type="hidden" name="idempotencyKey" />
       <input type="hidden" name="startsAt" value={startsAt} />
       <input type="hidden" name="returnTo" value={returnTo} />
       {formError ? <p className="rounded-xl border border-[#f0caca] bg-[#fff1f1] p-4 text-sm text-[#9b3e3e]" role="alert">{formError}</p> : null}
@@ -92,7 +89,7 @@ export default function ReservationForm({ action, services, returnTo = "/reserva
           name="serviceId"
           placeholder="Pesquise por serviço"
           required
-          onValueChange={(value) => { setServiceId(value); setFormError(""); }}
+          onValueChange={(value) => { setServiceId(value); setReservationTime(""); setFormError(""); }}
           options={services.map((service) => ({ value: service.service_id, label: `${service.service_name} · ${service.duration_minutes} min` }))}
         />
       </label>
@@ -110,7 +107,7 @@ export default function ReservationForm({ action, services, returnTo = "/reserva
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="block text-sm font-medium">
           Data desejada
-          <div className="mt-2"><MaskedDateInput value={reservationDate} onChange={(value) => { setReservationDate(value); setFormError(""); }} required /></div>
+          <div className="mt-2"><MaskedDateInput value={reservationDate} onChange={(value) => { setReservationDate(value); setReservationTime(""); setFormError(""); }} required /></div>
         </label>
 
         <label className="block text-sm font-medium">

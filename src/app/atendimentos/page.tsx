@@ -13,16 +13,15 @@ function toLocalFields(value: string) {
   const date = new Date(value);
   const parts = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false }).formatToParts(date);
   const get = (type: string) => parts.find((part) => part.type === type)?.value ?? "";
-  return { date: `${get("year")}-${get("month")}-${get("day")}`, time: `${get("hour")}:${get("minute")}` };
+  return { initialDate: `${get("year")}-${get("month")}-${get("day")}`, initialTime: `${get("hour")}:${get("minute")}` };
 }
 
 export default async function AttendancesPage({ searchParams }: AttendancesPageProps) {
   const { membership, supabase } = await requireActiveMember();
   const params = await searchParams;
-  const [{ data: customers }, { data: services }, { data: professionals }, { data: attendances, error }] = await Promise.all([
+  const [{ data: customers }, { data: services }, { data: attendances, error }] = await Promise.all([
     supabase.from("customers").select("id, name, phone_normalized").eq("organization_id", membership.organization_id).eq("status", "active").order("name"),
     supabase.from("services").select("id, name, average_price_cents").eq("organization_id", membership.organization_id).eq("active", true).order("name"),
-    supabase.from("professionals").select("id, name, default_commission_rate").eq("organization_id", membership.organization_id).eq("active", true).order("name"),
     supabase.from("attendances").select("id, customer_id, service_id, professional_id, performed_at, service_name_snapshot, price_cents, notes, status, customers(name)").eq("organization_id", membership.organization_id).order("performed_at", { ascending: false }).limit(500),
   ]);
   const isAdmin = membership.role === "admin";

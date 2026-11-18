@@ -6,6 +6,7 @@ import { createPublicReservationAction } from "@/app/reservar/actions";
 import wordmark from "../../../assets/djanira-wordmark.png";
 
 type ReservationPageProps = { searchParams: Promise<{ erro?: string; resultado?: string }> };
+type PublicContact = { whatsapp_phone: string | null };
 
 export const metadata = { title: "Reservar atendimento" };
 export const instant = false;
@@ -13,10 +14,11 @@ export const instant = false;
 export default async function ReservationPage({ searchParams }: ReservationPageProps) {
   const params = await searchParams;
   const client = await createClient();
-  const [{ data: services }, { data: contact }] = await Promise.all([
+  const [{ data: services }, { data: contactData }] = await Promise.all([
     client.rpc("get_public_reservation_catalog"),
     client.rpc("get_public_reservation_contact").maybeSingle(),
   ]);
+  const contact = contactData as PublicContact | null;
   const whatsappUrl = contact?.whatsapp_phone
     ? `https://wa.me/${contact.whatsapp_phone}?text=${encodeURIComponent("Olá! Acabei de solicitar uma reserva pelo site.")}`
     : null;

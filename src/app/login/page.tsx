@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import LoginForm from "./login-form";
 
 export const metadata = { title: "Entrar" };
+export const instant = false;
 
 export default function LoginPage() {
   return (

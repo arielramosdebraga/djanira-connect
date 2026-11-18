@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AttendanceForm from "@/app/atendimentos/attendance-form";
 import { createClient } from "@/lib/supabase/browser";
 
@@ -14,8 +14,8 @@ type AttendanceModalProps = {
 export default function AttendanceModal({ action, customers, services, professionals = [] }: AttendanceModalProps) {
   const [open, setOpen] = useState(false);
   const [availableProfessionals, setAvailableProfessionals] = useState(professionals);
-  const [professionalsLoaded, setProfessionalsLoaded] = useState(professionals.length > 0);
-  useEffect(() => { if (!open || professionalsLoaded) return; setProfessionalsLoaded(true); createClient().from("professionals").select("id, name, default_commission_rate").eq("active", true).order("name").then(({ data }) => setAvailableProfessionals((data ?? []) as typeof professionals)); }, [open, professionalsLoaded]);
+  const professionalsLoaded = useRef(professionals.length > 0);
+  useEffect(() => { if (!open || professionalsLoaded.current) return; professionalsLoaded.current = true; createClient().from("professionals").select("id, name, default_commission_rate").eq("active", true).order("name").then(({ data }) => setAvailableProfessionals((data ?? []) as typeof professionals)); }, [open]);
   return <>
     <button className="rounded-xl bg-[#8f4e68] px-5 py-3 font-semibold text-white hover:bg-[#69344b]" type="button" onClick={() => setOpen(true)}>Novo atendimento</button>
     {open ? <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#29231f]/50 p-4" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setOpen(false); }}>
