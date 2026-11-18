@@ -21,6 +21,11 @@ Fluxo validável de ponta a ponta:
 | 9 | Confirmações | `feature/modulo-confirmacoes` | Confirmações e lembretes de reserva |
 | 10 | Contratos e salas | `feature/modulo-contratos-salas` | Contratos versionados e gestão de salas |
 
+Status atual da implementação e pendências de liberação estão em
+`status-da-implementacao.md`. Agenda interna e reservas públicas já foram
+implementadas no branch de desenvolvimento, embora permaneçam etapas de
+validação e operação antes da produção.
+
 O módulo de contatos é entregue em duas partes por dependência funcional. O
 cadastro e a busca podem ser testados antes de atendimentos. Histórico de
 serviços, filtros por serviço e filtros de retorno são concluídos quando os
