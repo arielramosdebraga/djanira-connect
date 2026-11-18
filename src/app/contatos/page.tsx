@@ -12,7 +12,7 @@ export default async function ContactsPage({ searchParams }: ContactsPageProps) 
   const { membership, supabase } = await requireActiveMember();
   const params = await searchParams;
   const [{ data: contacts, error }, { data: services }, { data: attendanceRows }, { data: followUpRows }] = await Promise.all([
-    supabase.from("customers").select("id, name, phone_normalized, notes, do_not_contact, status, last_contact_at").eq("organization_id", membership.organization_id).eq("status", "active").order("name").limit(100),
+    supabase.from("customers").select("id, name, phone_normalized, notes, do_not_contact, status, last_contact_at").eq("organization_id", membership.organization_id).eq("status", "active").order("name").limit(500),
     supabase.from("services").select("id, name").eq("organization_id", membership.organization_id).order("name"),
     supabase.from("attendances").select("customer_id, service_id").eq("organization_id", membership.organization_id).eq("status", "completed"),
     supabase.from("follow_ups").select("customer_id, status").eq("organization_id", membership.organization_id),
