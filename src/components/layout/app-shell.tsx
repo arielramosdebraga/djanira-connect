@@ -23,7 +23,7 @@ function NavigationLinks({ pathname, onNavigate }: { pathname: string; onNavigat
   return <nav className="mt-8 space-y-1" aria-label="Navegação principal">{navigation.map(([label, href]) => { const active = pathname === href || pathname.startsWith(`${href}/`); return <Link key={href} href={href} onClick={onNavigate} className={`block rounded-xl px-4 py-3 text-sm font-semibold transition ${active ? "bg-[#faf0f4] text-[#8f4e68]" : "text-[#716963] hover:bg-[#faf5f7] hover:text-[#8f4e68]"}`}>{label}</Link>; })}</nav>;
 }
 
-function BrandMark({ compact = false }: { compact?: boolean }) { return <span className="inline-flex items-center justify-center"><Image src={logoMark} alt="Djanira Connect" width={compact ? 80 : 112} height={compact ? 56 : 78} className={compact ? "h-auto w-20 object-contain" : "h-auto w-28 object-contain"} priority /></span>; }
+function BrandMark({ compact = false }: { compact?: boolean }) { return <span className="inline-flex items-center justify-center"><Image src={logoMark} alt="Djanira Connect" width={compact ? 100 : 150} height={compact ? 70 : 105} className={compact ? "h-auto w-[100px] object-contain" : "h-auto w-[150px] object-contain"} priority /></span>; }
 
 export default function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
