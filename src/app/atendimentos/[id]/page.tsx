@@ -8,6 +8,8 @@ import { formatPhone } from "@/domains/contacts/phone";
 
 type EditPageProps = { params: Promise<{ id: string }>; searchParams: Promise<{ erro?: string; resultado?: string }> };
 
+export const instant = false;
+
 function toLocalFields(value: string) {
   const date = new Date(value);
   const parts = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false }).formatToParts(date);

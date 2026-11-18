@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useRef } from "react";
 import CurrencyInput from "@/components/forms/currency-input";
 import DateTimeFields from "@/components/forms/date-time-fields";
 import SearchableSelect from "@/components/forms/searchable-select";
@@ -23,11 +23,10 @@ type AttendanceFormProps = {
 };
 
 export default function AttendanceForm({ action, customers, services, professionals = [], attendanceId, initialCustomerId = "", initialServiceId = "", initialProfessionalId = "", initialDate = "", initialTime = "", initialPriceCents = null, initialNotes = "", submitLabel = "Registrar atendimento" }: AttendanceFormProps) {
-  const [idempotencyKey, setIdempotencyKey] = useState("");
-  useEffect(() => { setIdempotencyKey(crypto.randomUUID()); }, []);
+  const idempotencyInput = useRef<HTMLInputElement>(null);
 
-  return <form className="pt-6 space-y-4" action={action}>
-    <input type="hidden" name="idempotencyKey" value={idempotencyKey} />
+  return <form className="pt-6 space-y-4" action={action} onSubmit={() => { if (idempotencyInput.current && !idempotencyInput.current.value) idempotencyInput.current.value = crypto.randomUUID(); }}>
+    <input ref={idempotencyInput} type="hidden" name="idempotencyKey" />
     {attendanceId ? <input type="hidden" name="attendanceId" value={attendanceId} /> : null}
     <label className="block text-sm font-medium">
       <span className="block">Contato</span>

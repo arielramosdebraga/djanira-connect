@@ -25,8 +25,14 @@ export default function ContactList({ contacts, services }: { contacts: Contact[
   const [page, setPage] = useState(1);
   const pageSize = 12;
 
-  useEffect(() => setNow(Date.now()), []);
-  useEffect(() => setPage(1), [contactAgeFilter, returnFilter, search, serviceId]);
+  useEffect(() => {
+    const timer = window.setTimeout(() => setNow(Date.now()), 0);
+    return () => window.clearTimeout(timer);
+  }, []);
+  useEffect(() => {
+    const timer = window.setTimeout(() => setPage(1), 0);
+    return () => window.clearTimeout(timer);
+  }, [contactAgeFilter, returnFilter, search, serviceId]);
 
   const filteredContacts = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase().replace(/\D/g, "");

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import SearchableSelect from "@/components/forms/searchable-select";
 import MaskedDateInput from "@/components/forms/masked-date-input";
@@ -19,7 +19,7 @@ type AppointmentFormProps = {
 };
 
 export default function AppointmentForm({ action, customers, services, returnTo = "/agenda" }: AppointmentFormProps) {
-  const [idempotencyKey, setIdempotencyKey] = useState("");
+  const idempotencyInput = useRef<HTMLInputElement>(null);
   const [reservationDate, setReservationDate] = useState("");
   const [reservationTime, setReservationTime] = useState("");
   const timeOptions = Array.from({ length: 41 }, (_, index) => {
@@ -28,13 +28,9 @@ export default function AppointmentForm({ action, customers, services, returnTo 
     return `${hours}:${minutes}`;
   });
 
-  useEffect(() => {
-    setIdempotencyKey(crypto.randomUUID());
-  }, []);
-
   return (
-    <form className="mt-6 space-y-4" action={action}>
-      <input type="hidden" name="idempotencyKey" value={idempotencyKey} />
+    <form className="mt-6 space-y-4" action={action} onSubmit={() => { if (idempotencyInput.current && !idempotencyInput.current.value) idempotencyInput.current.value = crypto.randomUUID(); }}>
+      <input ref={idempotencyInput} type="hidden" name="idempotencyKey" />
       <input type="hidden" name="returnTo" value={returnTo} />
       <label className="block text-sm font-medium">
         Cliente
