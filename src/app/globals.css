@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f7f0e6;
+  --foreground: #2c241d;
+  --salon-copper: #a96532;
+  --salon-copper-dark: #75401f;
+  --salon-gold: #c8923d;
+  --salon-cream: #f7f0e6;
+  --salon-champagne: #f4e7d4;
+  --salon-brown: #2c241d;
+  --salon-muted: #76695c;
+  --salon-border: #e5d7c7;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand: var(--salon-copper);
+  --color-brand-dark: var(--salon-copper-dark);
+  --color-surface: #ffffff;
+  --color-muted: var(--salon-muted);
+  --color-border: var(--salon-border);
+}
+
+/* Paleta experimental inspirada na fachada: bronze, dourado quente, areia e creme. */
+[class~="bg-[#f8f7f4]"] { background-color: var(--salon-cream) !important; }
+[class~="bg-[#8f4e68]"] { background-color: var(--salon-copper) !important; }
+[class~="bg-[#69344b]"]:hover { background-color: var(--salon-copper-dark) !important; }
+[class~="bg-[#25d366]"] { background-color: var(--salon-copper) !important; }
+[class~="bg-[#1da851]"]:hover { background-color: var(--salon-copper-dark) !important; }
+.whatsapp-button { background-color: #25d366 !important; }
+.whatsapp-button:hover { background-color: #1da851 !important; }
+[class~="bg-[#faf0f4]"] { background-color: var(--salon-champagne) !important; }
+[class~="bg-[#e6cbd6]"] { background-color: #ead7b8 !important; }
+[class~="bg-[#fcfbfa]"] { background-color: #fcf8f1 !important; }
+[class~="bg-[#f1eeeb]"] { background-color: #eee5d9 !important; }
+[class~="bg-[#edf8f0]"] { background-color: #eaf4ec !important; }
+[class~="bg-[#fff1f1]"] { background-color: #fff3ed !important; }
+[class~="text-[#29231f]"] { color: var(--salon-brown) !important; }
+[class~="text-[#8f4e68]"] { color: var(--salon-copper) !important; }
+[class~="text-[#69344b]"] { color: var(--salon-copper-dark) !important; }
+[class~="text-[#716963]"] { color: var(--salon-muted) !important; }
+[class~="text-[#287342]"] { color: #2f7657 !important; }
+[class~="text-[#9b3e3e]"] { color: #a04d38 !important; }
+[class~="border-[#e8e1dc]"], [class~="border-[#eee8e3]"], [class~="border-[#f1ece8]"] { border-color: var(--salon-border) !important; }
+[class~="border-[#d9cec8]"] { border-color: #d8c3a8 !important; }
+[class~="border-[#e6cbd6]"] { border-color: #dfc297 !important; }
+[class~="border-[#f0caca]"] { border-color: #e5b9a9 !important; }
+[class~="border-[#cce8d3]"] { border-color: #cde6d4 !important; }
+[class~="hover:border-[#8f4e68]"]:hover { border-color: var(--salon-copper) !important; }
+[class~="hover:text-[#8f4e68]"]:hover { color: var(--salon-copper) !important; }
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+@media print {
+  body { background: #ffffff !important; }
+  .no-print, .print-hide { display: none !important; }
+  #report-content { max-width: none !important; padding: 0 !important; }
+  #report-content > section { break-inside: avoid; }
+}
+
+main a[href="/auth/logout"] {
+  display: none;
+}
+
+section[role="dialog"], .modal-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--salon-gold) transparent;
+}
+
+section[role="dialog"]::-webkit-scrollbar, .modal-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+section[role="dialog"]::-webkit-scrollbar-track, .modal-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 1.5rem 0;
+}
+
+section[role="dialog"]::-webkit-scrollbar-thumb, .modal-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--salon-gold);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+section[role="dialog"]::-webkit-scrollbar-thumb:hover, .modal-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--salon-copper);
+  border-width: 1px;
+}
