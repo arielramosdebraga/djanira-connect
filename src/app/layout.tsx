@@ -2,7 +2,7 @@ import "./globals.css";
 
 import ValidationMessages from "@components/forms/validation-messages";
 import AppShell from "@components/layout/app-shell";
-import { createClient } from "@lib/supabase/server";
+import { getFirebaseSession } from "@lib/firebase/session";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
@@ -12,8 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  const supabase = await createClient();
-  const { data } = await supabase.auth.getClaims();
-  const authenticated = Boolean(data?.claims?.sub);
+  const session = await getFirebaseSession();
+  const authenticated = Boolean(session?.userId);
   return <html lang="pt-BR"><body><ValidationMessages /><AppShell authenticated={authenticated}>{children}</AppShell></body></html>;
 }

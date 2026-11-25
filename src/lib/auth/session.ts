@@ -1,20 +1,17 @@
-import { createClient } from "@lib/supabase/server";
+import { createFirebaseServerClient } from "@lib/firebase/server-client";
+import { getFirebaseSession } from "@lib/firebase/session";
 import { redirect } from "next/navigation";
 
 export async function requireActiveMember() {
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.getClaims();
+  const session = await getFirebaseSession();
+  if (!session) redirect("/login");
+  if (!session.salonId) redirect("/login?erro=sem-acesso");
 
-  if (error || !data?.claims?.sub) redirect("/login");
-
-  const { data: membership, error: membershipError } = await supabase
-    .from("organization_members")
-    .select("organization_id, role")
-    .eq("user_id", data.claims.sub)
-    .eq("active", true)
-    .maybeSingle();
-
-  if (membershipError || !membership) redirect("/login?erro=sem-acesso");
-
-  return { supabase, userId: data.claims.sub, membership };
+  const role = session.role === "salon_owner" || session.role === "super_admin" ? "admin" : "operator";
+  const firebase = await createFirebaseServerClient(session);
+  return {
+    firebase,
+    userId: session.userId,
+    membership: { organization_id: session.salonId, role, active: true as const },
+  };
 }
