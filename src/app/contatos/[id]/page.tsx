@@ -12,11 +12,11 @@ export const instant = false;
 export default async function ContactDetailsPage({ params, searchParams }: ContactDetailsProps) {
   const { id } = await params;
   const query = await searchParams;
-  const { membership, supabase } = await requireActiveMember();
+  const { membership, firebase } = await requireActiveMember();
   const [{ data: contact }, { data: attendances }, { data: contactLogs }] = await Promise.all([
-    supabase.from("customers").select("id, name, phone_normalized, notes, do_not_contact, status, last_contact_at, created_at").eq("id", id).eq("organization_id", membership.organization_id).maybeSingle(),
-    supabase.from("attendances").select("id, performed_at, service_name_snapshot, price_cents, status").eq("customer_id", id).eq("organization_id", membership.organization_id).order("performed_at", { ascending: false }).limit(20),
-    supabase.from("contact_logs").select("id, contacted_at, channel, notes").eq("customer_id", id).eq("organization_id", membership.organization_id).order("contacted_at", { ascending: false }).limit(20),
+    firebase.collection("customers").select("id, name, phone_normalized, notes, do_not_contact, status, last_contact_at, created_at").eq("id", id).eq("organization_id", membership.organization_id).maybeSingle(),
+    firebase.collection("attendances").select("id, performed_at, service_name_snapshot, price_cents, status").eq("customer_id", id).eq("organization_id", membership.organization_id).order("performed_at", { ascending: false }).limit(20),
+    firebase.collection("contact_logs").select("id, contacted_at, channel, notes").eq("customer_id", id).eq("organization_id", membership.organization_id).order("contacted_at", { ascending: false }).limit(20),
   ]);
   if (!contact) notFound();
 

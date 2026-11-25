@@ -16,7 +16,7 @@ async function requireAdmin() {
 }
 
 export async function createServiceAction(formData: FormData) {
-  const { membership, supabase } = await requireAdmin();
+  const { membership, firebase } = await requireAdmin();
   const parsed = serviceInputSchema.safeParse({
     name: formData.get("name"),
     averagePrice: formData.get("averagePrice"),
@@ -26,7 +26,7 @@ export async function createServiceAction(formData: FormData) {
 
   if (!parsed.success) redirectWithError(parsed.error.issues[0]?.message ?? "Confira os dados informados.");
 
-  const { error } = await supabase.from("services").insert({
+  const { error } = await firebase.collection("services").insert({
     organization_id: membership.organization_id,
     name: parsed.data.name,
     average_price_cents: parsed.data.averagePrice,
@@ -40,14 +40,14 @@ export async function createServiceAction(formData: FormData) {
 }
 
 export async function toggleServiceAction(formData: FormData) {
-  const { membership, supabase } = await requireAdmin();
+  const { membership, firebase } = await requireAdmin();
   const serviceId = String(formData.get("serviceId") ?? "");
   const active = formData.get("active") === "true";
 
   if (!serviceId) redirectWithError("Serviço inválido.");
 
-  const { error } = await supabase
-    .from("services")
+  const { error } = await firebase
+    .collection("services")
     .update({ active: !active, updated_at: new Date().toISOString() })
     .eq("id", serviceId)
     .eq("organization_id", membership.organization_id);

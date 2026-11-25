@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function createAttendanceAction(formData: FormData) {
-  const { membership, supabase } = await requireActiveMember();
+  const { membership, firebase } = await requireActiveMember();
   const parsed = attendanceInputSchema.safeParse({
     customerId: formData.get("customerId"),
     serviceId: formData.get("serviceId"),
@@ -22,15 +22,15 @@ export async function createAttendanceAction(formData: FormData) {
   let performedAt: string;
   try { performedAt = parseSalonDateTime(parsed.data.performedAt); } catch (error) { redirect(`/atendimentos?erro=${encodeURIComponent(error instanceof Error ? error.message : "Data inválida.")}`); }
 
-  const { error } = await supabase.rpc("register_attendance", {
-    p_organization_id: membership.organization_id,
-    p_customer_id: parsed.data.customerId,
-    p_service_id: parsed.data.serviceId,
-    p_performed_at: performedAt,
-    p_professional_id: parsed.data.professionalId || null,
-    p_price_cents: parsed.data.price,
-    p_notes: parsed.data.notes || null,
-    p_idempotency_key: parsed.data.idempotencyKey,
+  const { error } = await firebase.action("registerAttendance", {
+    salonId: membership.organization_id,
+    clientId: parsed.data.customerId,
+    serviceId: parsed.data.serviceId,
+    performedAt: performedAt,
+    professionalId: parsed.data.professionalId || null,
+    priceCents: parsed.data.price,
+    notes: parsed.data.notes || null,
+    idempotencyKey: parsed.data.idempotencyKey,
   });
 
   if (error) redirect(`/atendimentos?erro=${encodeURIComponent("Não foi possível registrar o atendimento.")}`);
@@ -40,11 +40,11 @@ export async function createAttendanceAction(formData: FormData) {
 }
 
 export async function cancelAttendanceAction(formData: FormData) {
-  const { membership, supabase } = await requireActiveMember();
+  const { membership, firebase } = await requireActiveMember();
   if (membership.role !== "admin") redirect("/atendimentos?erro=sem-permissao");
   const attendanceId = String(formData.get("attendanceId") ?? "");
   if (!attendanceId) redirect("/atendimentos?erro=atendimento-invalido");
-  const { error } = await supabase.rpc("cancel_attendance", { p_attendance_id: attendanceId });
+  const { error } = await firebase.action("cancelAttendance", { attendanceId: attendanceId });
   if (error) redirect(`/atendimentos?erro=${encodeURIComponent(error.message.includes("permissão") ? error.message : "Não foi possível cancelar o atendimento.")}`);
   revalidatePath("/atendimentos");
   revalidatePath("/retornos");
@@ -53,7 +53,7 @@ export async function cancelAttendanceAction(formData: FormData) {
 }
 
 export async function updateAttendanceAction(formData: FormData) {
-  const { membership, supabase } = await requireActiveMember();
+  const { membership, firebase } = await requireActiveMember();
   if (membership.role !== "admin") redirect("/atendimentos?erro=sem-permissao");
   const attendanceId = String(formData.get("attendanceId") ?? "");
   const customerId = String(formData.get("customerId") ?? "");
@@ -66,7 +66,7 @@ export async function updateAttendanceAction(formData: FormData) {
   if (!attendanceId || !customerId || !serviceId || !performedAtInput || (price !== null && (!Number.isFinite(price) || price < 0))) redirect(`/atendimentos/${attendanceId}?erro=Confira os dados informados.`);
   let performedAt: string;
   try { performedAt = parseSalonDateTime(performedAtInput); } catch (error) { redirect(`/atendimentos/${attendanceId}?erro=${encodeURIComponent(error instanceof Error ? error.message : "Data inválida.")}`); }
-  const { error } = await supabase.rpc("update_attendance", { p_attendance_id: attendanceId, p_customer_id: customerId, p_service_id: serviceId, p_performed_at: performedAt, p_professional_id: professionalId, p_price_cents: price === null ? null : Math.round(price * 100), p_notes: String(formData.get("notes") ?? "").trim() || null });
+  const { error } = await firebase.action("updateAttendance", { attendanceId: attendanceId, clientId: customerId, serviceId: serviceId, performedAt: performedAt, professionalId: professionalId, priceCents: price === null ? null : Math.round(price * 100), notes: String(formData.get("notes") ?? "").trim() || null });
   if (error) redirect(`/atendimentos/${attendanceId}?erro=${encodeURIComponent(error.message.includes("permissão") ? error.message : "Não foi possível atualizar o atendimento.")}`);
   revalidatePath("/atendimentos"); revalidatePath(`/atendimentos/${attendanceId}`); revalidatePath("/retornos"); revalidatePath("/inicio");
   redirect(`/atendimentos/${attendanceId}?resultado=atualizado`);

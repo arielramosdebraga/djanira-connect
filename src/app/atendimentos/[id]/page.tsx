@@ -18,13 +18,13 @@ function toLocalFields(value: string) {
 }
 
 export default async function EditAttendancePage({ params, searchParams }: EditPageProps) {
-  const { membership, supabase } = await requireActiveMember();
+  const { membership, firebase } = await requireActiveMember();
   if (membership.role !== "admin") notFound();
   const { id } = await params;
   const [{ data: attendance }, { data: customers }, { data: services }] = await Promise.all([
-    supabase.from("attendances").select("id, customer_id, service_id, performed_at, price_cents, notes, status").eq("id", id).eq("organization_id", membership.organization_id).maybeSingle(),
-    supabase.from("customers").select("id, name, phone_normalized").eq("organization_id", membership.organization_id).eq("status", "active").order("name"),
-    supabase.from("services").select("id, name").eq("organization_id", membership.organization_id).eq("active", true).order("name"),
+    firebase.collection("attendances").select("id, customer_id, service_id, performed_at, price_cents, notes, status").eq("id", id).eq("organization_id", membership.organization_id).maybeSingle(),
+    firebase.collection("customers").select("id, name, phone_normalized").eq("organization_id", membership.organization_id).eq("status", "active").order("name"),
+    firebase.collection("services").select("id, name").eq("organization_id", membership.organization_id).eq("active", true).order("name"),
   ]);
   if (!attendance || attendance.status !== "completed") notFound();
   const query = await searchParams;
