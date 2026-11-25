@@ -1,9 +1,9 @@
 "use server";
 
+import { normalizePhone } from "@domains/contacts/phone";
+import { requireActiveMember } from "@lib/auth/session";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { requireActiveMember } from "@/lib/auth/session";
-import { normalizePhone } from "@/domains/contacts/phone";
 
 export async function updateSettingsAction(formData: FormData) {
   const { membership, supabase } = await requireActiveMember();

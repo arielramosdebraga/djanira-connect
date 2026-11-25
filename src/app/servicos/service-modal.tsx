@@ -1,9 +1,9 @@
 "use client";
 
+import CurrencyInput from "@components/forms/currency-input";
+import SearchableSelect from "@components/forms/searchable-select";
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
-import CurrencyInput from "@/components/forms/currency-input";
-import SearchableSelect from "@/components/forms/searchable-select";
 
 function formatDuration(minutes: number) {
   const hours = Math.floor(minutes / 60);

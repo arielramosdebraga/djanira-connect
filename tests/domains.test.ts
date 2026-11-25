@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { normalizePhone, formatPhone } from "../src/domains/contacts/phone";
-import { contactInputSchema } from "../src/domains/contacts/validation";
+
 import { attendanceInputSchema } from "../src/domains/attendances/validation";
+import { formatPhone,normalizePhone } from "../src/domains/contacts/phone";
+import { contactInputSchema } from "../src/domains/contacts/validation";
 import { serviceInputSchema } from "../src/domains/services/validation";
 import { parseSalonDateTime } from "../src/lib/dates/salon";
 import { addCalendarDays, formatSalonDate, getSalonMonthStart, getSalonToday, getSalonWeekStart } from "../src/lib/dates/salon-calendar";

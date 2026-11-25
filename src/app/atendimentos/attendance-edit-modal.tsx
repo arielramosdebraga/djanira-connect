@@ -1,8 +1,8 @@
 "use client";
 
+import AttendanceForm from "@app/atendimentos/attendance-form";
+import { createClient } from "@lib/supabase/browser";
 import { useEffect, useRef, useState } from "react";
-import AttendanceForm from "@/app/atendimentos/attendance-form";
-import { createClient } from "@/lib/supabase/browser";
 
 type AttendanceEditModalProps = {
   action: (formData: FormData) => void | Promise<void>;

@@ -1,8 +1,8 @@
+import { createContactAction } from "@app/contatos/actions";
+import ContactList from "@app/contatos/contact-list";
+import ContactModal from "@app/contatos/contact-modal";
+import { requireActiveMember } from "@lib/auth/session";
 import Link from "next/link";
-import { createContactAction } from "@/app/contatos/actions";
-import ContactList from "@/app/contatos/contact-list";
-import ContactModal from "@/app/contatos/contact-modal";
-import { requireActiveMember } from "@/lib/auth/session";
 
 type ContactsPageProps = { searchParams: Promise<{ erro?: string; resultado?: string }> };
 export const metadata = { title: "Contatos" };

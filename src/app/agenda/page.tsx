@@ -1,8 +1,8 @@
+import { createAppointmentAction } from "@app/agenda/appointment-actions";
+import DashboardAppointmentModal from "@app/inicio/dashboard-appointment-modal";
+import DashboardCalendar from "@app/inicio/dashboard-calendar";
+import { requireActiveMember } from "@lib/auth/session";
 import Link from "next/link";
-import DashboardCalendar from "@/app/inicio/dashboard-calendar";
-import DashboardAppointmentModal from "@/app/inicio/dashboard-appointment-modal";
-import { createAppointmentAction } from "@/app/agenda/appointment-actions";
-import { requireActiveMember } from "@/lib/auth/session";
 
 type AgendaPageProps = { searchParams: Promise<{ erro?: string; resultado?: string }> };
 export const metadata = { title: "Agenda" };

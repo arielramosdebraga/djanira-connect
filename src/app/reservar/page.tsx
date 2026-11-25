@@ -1,9 +1,9 @@
+import { createPublicReservationAction } from "@app/reservar/actions";
+import ReservationForm from "@app/reservar/reservation-form";
+import wordmark from "@assets/djanira-wordmark.png";
+import { createClient } from "@lib/supabase/server";
 import Image from "next/image";
 import { Suspense } from "react";
-import { createClient } from "@/lib/supabase/server";
-import ReservationForm from "@/app/reservar/reservation-form";
-import { createPublicReservationAction } from "@/app/reservar/actions";
-import wordmark from "../../../assets/djanira-wordmark.png";
 
 type ReservationPageProps = { searchParams: Promise<{ erro?: string; resultado?: string }> };
 type PublicContact = { whatsapp_phone: string | null };

@@ -9,7 +9,12 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "supabase:start": "npx supabase start",
+    "supabase:stop": "npx supabase stop",
+    "supabase:reset": "npx supabase db reset",
+    "supabase:status": "npx supabase status",
+    "supabase:types": "npx supabase gen types typescript --local > src/types/database.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",
@@ -27,6 +32,7 @@
     "@vitest/coverage-v8": "^2.1.9",
     "eslint": "^9",
     "eslint-config-next": "16.4.6",
+    "eslint-plugin-simple-import-sort": "^14.0.0",
     "tailwindcss": "4.3.3",
     "typescript": "^5",
     "vitest": "^2.1.9"

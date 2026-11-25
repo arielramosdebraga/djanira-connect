@@ -1,7 +1,7 @@
 "use client";
 
+import MaskedDateInput from "@components/forms/masked-date-input";
 import { useState } from "react";
-import MaskedDateInput from "@/components/forms/masked-date-input";
 
 export default function FollowUpDateInput({ name, defaultValue }: { name: string; defaultValue: string }) {
   const [value, setValue] = useState(defaultValue);

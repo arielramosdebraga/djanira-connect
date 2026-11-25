@@ -1,8 +1,8 @@
 "use client";
 
+import { createPublicReservationAction } from "@app/reservar/actions";
+import ReservationForm from "@app/reservar/reservation-form";
 import { useState } from "react";
-import ReservationForm from "@/app/reservar/reservation-form";
-import { createPublicReservationAction } from "@/app/reservar/actions";
 
 type PublicReservationService = { service_id: string; service_name: string; duration_minutes: number };
 

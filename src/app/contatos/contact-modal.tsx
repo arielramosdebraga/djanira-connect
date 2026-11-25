@@ -1,8 +1,8 @@
 "use client";
 
+import PhoneInput from "@components/forms/phone-input";
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
-import PhoneInput from "@/components/forms/phone-input";
 
 function SubmitButton() {
   const { pending } = useFormStatus();

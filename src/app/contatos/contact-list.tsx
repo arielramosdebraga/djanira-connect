@@ -1,10 +1,10 @@
 "use client";
 
+import SearchableSelect from "@components/forms/searchable-select";
+import PaginationControls from "@components/pagination-controls";
+import { formatPhone } from "@domains/contacts/phone";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { formatPhone } from "@/domains/contacts/phone";
-import SearchableSelect from "@/components/forms/searchable-select";
-import PaginationControls from "@/components/pagination-controls";
 
 type Contact = { id: string; name: string; phone_normalized: string; notes: string | null; do_not_contact: boolean; last_contact_at: string | null; serviceIds: string[]; followUpStatuses: string[] };
 type Service = { id: string; name: string };

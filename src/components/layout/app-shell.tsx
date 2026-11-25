@@ -1,10 +1,10 @@
 "use client";
 
+import logoMark from "@assets/djanira-mark-cropped.png";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type ReactNode, useState } from "react";
-import logoMark from "../../../assets/djanira-mark-cropped.png";
 
 const navigation = [
   ["Início", "/inicio"],

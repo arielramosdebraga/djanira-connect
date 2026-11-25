@@ -1,9 +1,9 @@
+import { archiveContactAction, updateContactAction } from "@app/contatos/actions";
+import PhoneInput from "@components/forms/phone-input";
+import { formatPhone } from "@domains/contacts/phone";
+import { requireActiveMember } from "@lib/auth/session";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { archiveContactAction, updateContactAction } from "@/app/contatos/actions";
-import PhoneInput from "@/components/forms/phone-input";
-import { formatPhone } from "@/domains/contacts/phone";
-import { requireActiveMember } from "@/lib/auth/session";
 
 type ContactDetailsProps = { params: Promise<{ id: string }>; searchParams: Promise<{ erro?: string; resultado?: string }> };
 export const metadata = { title: "Ficha do contato" };

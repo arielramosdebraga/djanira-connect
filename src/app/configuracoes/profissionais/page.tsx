@@ -1,6 +1,6 @@
+import { createProfessionalAction, toggleProfessionalAction } from "@app/configuracoes/profissionais-actions";
+import { requireActiveMember } from "@lib/auth/session";
 import Link from "next/link";
-import { requireActiveMember } from "@/lib/auth/session";
-import { createProfessionalAction, toggleProfessionalAction } from "@/app/configuracoes/profissionais-actions";
 
 export const metadata = { title: "Profissionais" };
 export const instant = false;

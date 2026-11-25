@@ -1,6 +1,6 @@
+import { formatPhone } from "@domains/contacts/phone";
+import { formatSalonDate, getSalonToday } from "@lib/dates/salon-calendar";
 import Link from "next/link";
-import { formatPhone } from "@/domains/contacts/phone";
-import { formatSalonDate, getSalonToday } from "@/lib/dates/salon-calendar";
 
 type ContactSummary = { id: string; name: string; phone_normalized: string };
 type FollowUpSummary = { id: string; next_follow_up_date: string; status: string; customers: { name: string; phone_normalized: string; do_not_contact: boolean; status: string } | Array<{ name: string; phone_normalized: string; do_not_contact: boolean; status: string }> | null; services: { name: string } | Array<{ name: string }> | null };

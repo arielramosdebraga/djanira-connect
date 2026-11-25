@@ -1,6 +1,7 @@
+import { requireActiveMember } from "@lib/auth/session";
+import { formatSalonDate, getSalonMonthStart, getSalonToday } from "@lib/dates/salon-calendar";
 import Link from "next/link";
-import { requireActiveMember } from "@/lib/auth/session";
-import { formatSalonDate, getSalonMonthStart, getSalonToday } from "@/lib/dates/salon-calendar";
+
 import PrintReportButton from "./print-report-button";
 import ReportFilters from "./report-filters";
 

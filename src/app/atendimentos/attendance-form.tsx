@@ -1,10 +1,10 @@
 "use client";
 
+import CurrencyInput from "@components/forms/currency-input";
+import DateTimeFields from "@components/forms/date-time-fields";
+import SearchableSelect from "@components/forms/searchable-select";
+import { formatPhone } from "@domains/contacts/phone";
 import { useRef } from "react";
-import CurrencyInput from "@/components/forms/currency-input";
-import DateTimeFields from "@/components/forms/date-time-fields";
-import SearchableSelect from "@/components/forms/searchable-select";
-import { formatPhone } from "@/domains/contacts/phone";
 
 type AttendanceFormProps = {
   action: (formData: FormData) => void | Promise<void>;

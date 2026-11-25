@@ -18,7 +18,7 @@ begin
   limit 1;
 
   if v_organization_id is null then
-    raise exception 'Crie uma organização antes de executar os dados de demonstração.';
+    return;
   end if;
 
   select user_id into v_user_id
@@ -28,7 +28,7 @@ begin
   limit 1;
 
   if v_user_id is null then
-    raise exception 'Adicione um membro ativo antes de executar os dados de demonstração.';
+    return;
   end if;
 
   select id into v_customer_marina from public.customers where organization_id = v_organization_id and phone_normalized = '5511999990001' limit 1;

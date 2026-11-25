@@ -1,12 +1,12 @@
-import { requireActiveMember } from "@/lib/auth/session";
-import DashboardCalendar from "@/app/inicio/dashboard-calendar";
-import DashboardAppointmentModal from "@/app/inicio/dashboard-appointment-modal";
-import DashboardPublicReservationModal from "@/app/inicio/dashboard-public-reservation-modal";
-import { DashboardContactsSection, DashboardFollowUpsSection } from "@/app/inicio/dashboard-contacts-follow-ups";
-import DashboardAppointmentsSummary from "@/app/inicio/dashboard-appointments-summary";
-import DashboardRevenue from "@/app/inicio/dashboard-revenue";
-import { createAppointmentAction } from "@/app/agenda/appointment-actions";
-import { addCalendarDays, getSalonToday } from "@/lib/dates/salon-calendar";
+import { createAppointmentAction } from "@app/agenda/appointment-actions";
+import DashboardAppointmentModal from "@app/inicio/dashboard-appointment-modal";
+import DashboardAppointmentsSummary from "@app/inicio/dashboard-appointments-summary";
+import DashboardCalendar from "@app/inicio/dashboard-calendar";
+import { DashboardContactsSection, DashboardFollowUpsSection } from "@app/inicio/dashboard-contacts-follow-ups";
+import DashboardPublicReservationModal from "@app/inicio/dashboard-public-reservation-modal";
+import DashboardRevenue from "@app/inicio/dashboard-revenue";
+import { requireActiveMember } from "@lib/auth/session";
+import { addCalendarDays, getSalonToday } from "@lib/dates/salon-calendar";
 
 export const metadata = { title: "Início" };
 export const instant = false;

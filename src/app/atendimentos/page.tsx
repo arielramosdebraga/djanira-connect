@@ -1,9 +1,9 @@
+import { cancelAttendanceAction, createAttendanceAction, updateAttendanceAction } from "@app/atendimentos/actions";
+import AttendanceEditModal from "@app/atendimentos/attendance-edit-modal";
+import AttendanceModal from "@app/atendimentos/attendance-modal";
+import CancelAttendanceButton from "@app/atendimentos/cancel-attendance-button";
+import { requireActiveMember } from "@lib/auth/session";
 import Link from "next/link";
-import { cancelAttendanceAction, createAttendanceAction, updateAttendanceAction } from "@/app/atendimentos/actions";
-import AttendanceModal from "@/app/atendimentos/attendance-modal";
-import AttendanceEditModal from "@/app/atendimentos/attendance-edit-modal";
-import CancelAttendanceButton from "@/app/atendimentos/cancel-attendance-button";
-import { requireActiveMember } from "@/lib/auth/session";
 
 type AttendancesPageProps = { searchParams: Promise<{ erro?: string; resultado?: string }> };
 export const metadata = { title: "Atendimentos" };

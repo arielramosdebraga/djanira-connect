@@ -1,5 +1,5 @@
+import { addCalendarDays, getSalonToday } from "@lib/dates/salon-calendar";
 import Link from "next/link";
-import { addCalendarDays, getSalonToday } from "@/lib/dates/salon-calendar";
 
 type Appointment = { id: string; starts_at: string; ends_at: string; status: string; customers: { name: string } | Array<{ name: string }> | null; services: { name: string } | Array<{ name: string }> | null };
 

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
+
 import RecoveryForm from "./recovery-form";
 
 export const metadata = { title: "Recuperar acesso" };

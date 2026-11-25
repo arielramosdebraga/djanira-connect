@@ -1,7 +1,7 @@
 "use client";
 
+import AppointmentForm from "@app/agenda/appointment-form";
 import { useState } from "react";
-import AppointmentForm from "@/app/agenda/appointment-form";
 
 type DashboardAppointmentModalProps = {
   action: (formData: FormData) => void | Promise<void>;

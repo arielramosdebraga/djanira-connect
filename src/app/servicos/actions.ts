@@ -1,9 +1,9 @@
 "use server";
 
+import { serviceInputSchema } from "@domains/services/validation";
+import { requireActiveMember } from "@lib/auth/session";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { requireActiveMember } from "@/lib/auth/session";
-import { serviceInputSchema } from "@/domains/services/validation";
 
 function redirectWithError(message: string): never {
   redirect(`/servicos?erro=${encodeURIComponent(message)}`);

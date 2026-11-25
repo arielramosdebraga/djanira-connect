@@ -6,7 +6,7 @@ declare
 begin
   select id into v_organization_id from public.organizations order by created_at limit 1;
   if v_organization_id is null then
-    raise exception 'Crie uma organização antes de cadastrar os serviços.';
+    return;
   end if;
 
   insert into public.services (organization_id, name, average_price_cents, duration_minutes, return_period_days, active)

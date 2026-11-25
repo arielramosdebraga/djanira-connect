@@ -1,8 +1,8 @@
+import { createServiceAction } from "@app/servicos/actions";
+import ServiceList from "@app/servicos/service-list";
+import ServiceModal from "@app/servicos/service-modal";
+import { requireActiveMember } from "@lib/auth/session";
 import Link from "next/link";
-import { createServiceAction } from "@/app/servicos/actions";
-import ServiceModal from "@/app/servicos/service-modal";
-import ServiceList from "@/app/servicos/service-list";
-import { requireActiveMember } from "@/lib/auth/session";
 
 type ServicesPageProps = { searchParams: Promise<{ erro?: string; resultado?: string }> };
 

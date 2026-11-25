@@ -1,6 +1,6 @@
+import wordmark from "@assets/djanira-wordmark.png";
 import Image from "next/image";
 import Link from "next/link";
-import wordmark from "../../assets/djanira-wordmark.png";
 
 export const instant = false;
 

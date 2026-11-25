@@ -1,7 +1,7 @@
 "use client";
 
+import { toggleServiceAction } from "@app/servicos/actions";
 import { useMemo, useState } from "react";
-import { toggleServiceAction } from "@/app/servicos/actions";
 
 type Service = { id: string; name: string; average_price_cents: number | null; duration_minutes: number; return_period_days: number | null; active: boolean };
 

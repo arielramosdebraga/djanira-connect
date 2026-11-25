@@ -1,14 +1,14 @@
 "use client";
 
+import wordmark from "@assets/djanira-wordmark.png";
+import curlsImage from "@assets/site-photos/salon-photo-01.webp";
+import menuImage from "@assets/site-photos/salon-photo-02.webp";
+import resultImage from "@assets/site-photos/salon-photo-03.webp";
+import brunetteImage from "@assets/site-photos/salon-photo-04.webp";
+import finishImage from "@assets/site-photos/salon-photo-05.webp";
+import blondeImage from "@assets/site-photos/salon-photo-06.webp";
 import Image, { type StaticImageData } from "next/image";
 import { useEffect, useState } from "react";
-import menuImage from "../../assets/site-photos/salon-photo-02.webp";
-import finishImage from "../../assets/site-photos/salon-photo-05.webp";
-import resultImage from "../../assets/site-photos/salon-photo-03.webp";
-import brunetteImage from "../../assets/site-photos/salon-photo-04.webp";
-import curlsImage from "../../assets/site-photos/salon-photo-01.webp";
-import blondeImage from "../../assets/site-photos/salon-photo-06.webp";
-import wordmark from "../../assets/djanira-wordmark.png";
 
 type HomeHeroSliderProps = { whatsappUrl: string | null };
 type Slide = { image: StaticImageData; eyebrow: string; title: string; description: string };

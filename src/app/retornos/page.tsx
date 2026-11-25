@@ -1,9 +1,9 @@
+import { dismissFollowUpAction,postponeFollowUpAction, recordContactAction } from "@app/retornos/actions";
+import FollowUpDateInput from "@app/retornos/follow-up-date-input";
+import { formatPhone } from "@domains/contacts/phone";
+import { requireActiveMember } from "@lib/auth/session";
+import { addCalendarDays, formatSalonDate, getSalonToday } from "@lib/dates/salon-calendar";
 import Link from "next/link";
-import { recordContactAction, postponeFollowUpAction, dismissFollowUpAction } from "@/app/retornos/actions";
-import { addCalendarDays, formatSalonDate, getSalonToday } from "@/lib/dates/salon-calendar";
-import { formatPhone } from "@/domains/contacts/phone";
-import { requireActiveMember } from "@/lib/auth/session";
-import FollowUpDateInput from "@/app/retornos/follow-up-date-input";
 
 type FollowUpPageProps = { searchParams: Promise<{ erro?: string; resultado?: string }> };
 export const metadata = { title: "Retornos" };

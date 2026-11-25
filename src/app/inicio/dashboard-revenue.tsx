@@ -1,5 +1,5 @@
+import { getSalonMonthStart, getSalonToday, getSalonWeekStart } from "@lib/dates/salon-calendar";
 import Link from "next/link";
-import { getSalonMonthStart, getSalonToday, getSalonWeekStart } from "@/lib/dates/salon-calendar";
 
 type RevenueAttendance = { performed_at: string; price_cents: number | null; status: string };
 

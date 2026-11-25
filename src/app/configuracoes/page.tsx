@@ -1,8 +1,8 @@
+import { saveAvailabilityAction } from "@app/agenda/actions";
+import { updateSettingsAction } from "@app/configuracoes/actions";
+import PhoneInput from "@components/forms/phone-input";
+import { requireActiveMember } from "@lib/auth/session";
 import Link from "next/link";
-import { updateSettingsAction } from "@/app/configuracoes/actions";
-import { saveAvailabilityAction } from "@/app/agenda/actions";
-import { requireActiveMember } from "@/lib/auth/session";
-import PhoneInput from "@/components/forms/phone-input";
 
 type SettingsPageProps = { searchParams: Promise<{ erro?: string; resultado?: string }> };
 const days = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];

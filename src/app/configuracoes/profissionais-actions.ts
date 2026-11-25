@@ -1,8 +1,8 @@
 "use server";
 
+import { requireActiveMember } from "@lib/auth/session";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { requireActiveMember } from "@/lib/auth/session";
 
 export async function createProfessionalAction(formData: FormData) {
   const { membership, supabase } = await requireActiveMember();

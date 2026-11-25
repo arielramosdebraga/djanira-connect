@@ -1,9 +1,9 @@
 "use server";
 
+import { normalizePhone } from "@domains/contacts/phone";
+import { parseSalonDateTime } from "@lib/dates/salon";
+import { createClient } from "@lib/supabase/server";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
-import { normalizePhone } from "@/domains/contacts/phone";
-import { parseSalonDateTime } from "@/lib/dates/salon";
 
 export async function createPublicReservationAction(formData: FormData) {
   const requestedReturnTo = String(formData.get("returnTo") ?? "/reservar");

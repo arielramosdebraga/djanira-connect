@@ -1,9 +1,10 @@
+import wordmark from "@assets/djanira-wordmark.png";
+import { createClient } from "@lib/supabase/server";
 import Image from "next/image";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
-import HomeHeroSlider from "./home-hero-slider";
-import wordmark from "../../assets/djanira-wordmark.png";
+
 import packageJson from "../../package.json";
+import HomeHeroSlider from "./home-hero-slider";
 
 export const metadata = { title: "Djanira Montclair" };
 export const instant = false;

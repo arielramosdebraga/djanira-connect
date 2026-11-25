@@ -36,6 +36,8 @@ yarn-error.log*
 
 # Supabase local development
 .supabase/
+supabase/.branches/
+supabase/.temp/
 
 # local tooling
 .vscode/

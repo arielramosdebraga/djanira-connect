@@ -1,10 +1,10 @@
 "use client";
 
+import MaskedDateInput from "@components/forms/masked-date-input";
+import SearchableSelect from "@components/forms/searchable-select";
+import { createClient } from "@lib/supabase/browser";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
-import SearchableSelect from "@/components/forms/searchable-select";
-import MaskedDateInput from "@/components/forms/masked-date-input";
-import { createClient } from "@/lib/supabase/browser";
 
 function formatPhoneInput(value: string) {
   const digits = value.replace(/\D/g, "").slice(0, 11);

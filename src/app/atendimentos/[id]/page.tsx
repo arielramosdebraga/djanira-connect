@@ -1,10 +1,10 @@
+import { updateAttendanceAction } from "@app/atendimentos/actions";
+import DateTimeFields from "@components/forms/date-time-fields";
+import SearchableSelect from "@components/forms/searchable-select";
+import { formatPhone } from "@domains/contacts/phone";
+import { requireActiveMember } from "@lib/auth/session";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { requireActiveMember } from "@/lib/auth/session";
-import { updateAttendanceAction } from "@/app/atendimentos/actions";
-import SearchableSelect from "@/components/forms/searchable-select";
-import DateTimeFields from "@/components/forms/date-time-fields";
-import { formatPhone } from "@/domains/contacts/phone";
 
 type EditPageProps = { params: Promise<{ id: string }>; searchParams: Promise<{ erro?: string; resultado?: string }> };
 

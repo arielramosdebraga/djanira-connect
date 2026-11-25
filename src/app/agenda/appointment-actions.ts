@@ -1,9 +1,9 @@
 "use server";
 
+import { requireActiveMember } from "@lib/auth/session";
+import { parseSalonDateTime } from "@lib/dates/salon";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { requireActiveMember } from "@/lib/auth/session";
-import { parseSalonDateTime } from "@/lib/dates/salon";
 
 export async function createAppointmentAction(formData: FormData) {
   const { membership, supabase } = await requireActiveMember();
