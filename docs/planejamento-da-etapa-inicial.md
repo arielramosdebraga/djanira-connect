@@ -265,9 +265,9 @@ A gestão completa de usuários pode ficar fora da interface inicial. O provisio
 | Estilos | Tailwind CSS | Desenvolvimento rápido de telas responsivas |
 | Componentes | shadcn/ui, usando apenas o necessário | Base acessível e código controlado pelo projeto |
 | Formulários | React Hook Form e Zod | Validação reutilizável |
-| Banco | PostgreSQL no Supabase | Banco relacional adequado ao histórico e crescimento |
-| Autenticação | Supabase Auth | Evita implementar gestão de credenciais |
-| Acesso a dados | Cliente oficial do Supabase | Menos camadas na primeira versão |
+| Banco | Cloud Firestore compartilhado com o aplicativo NailFlow | Banco relacional adequado ao histórico e crescimento |
+| Autenticação | Firebase Authentication compartilhado com o NailFlow | Evita implementar gestão de credenciais |
+| Acesso a dados | Firebase Admin SDK no servidor e SDK Firebase Auth no navegador | Menos camadas na primeira versão |
 | Hospedagem | Vercel | Compatível com Next.js |
 | Versionamento | Git e repositório privado | Histórico e deploy integrado |
 | Testes | Vitest e Playwright | Regras unitárias e fluxos essenciais |
@@ -279,12 +279,12 @@ Usar versões estáveis e compatíveis entre si, com dependências travadas no a
 Adotar um **monólito modular**:
 
 - Uma aplicação Next.js.
-- Um banco PostgreSQL.
+- Um projeto Cloud Firestore compartilhado com o aplicativo NailFlow.
 - Módulos separados por domínio: serviços, clientes, atendimentos e retornos.
 - Componentes de interface compartilhados.
 - Regras de negócio fora dos componentes visuais.
 - Acesso ao banco concentrado em funções de dados.
-- Migrações SQL versionadas.
+- Modelo de dados, regras e índices do Firestore documentados e versionados no projeto que os administra.
 
 ### Fluxo de acesso
 
@@ -292,8 +292,8 @@ Adotar um **monólito modular**:
 - Componentes de cliente ficam restritos às partes interativas.
 - Escritas usam Server Actions com validação e autorização.
 - Route Handlers ficam reservados para futuras APIs ou integrações.
-- A sessão autenticada acompanha as operações no Supabase.
-- Políticas de segurança no banco continuam obrigatórias.
+- A sessão Firebase acompanha operações no servidor, que valida papel e salonId.
+- O aplicativo usa regras do Firestore; o site valida sessão, papel e salonId no servidor.
 
 Não adotar agora:
 
@@ -417,13 +417,13 @@ A função deve validar organização, autorização e integridade, sem depender
 ### Proteção de acesso
 
 - Autenticação obrigatória nas áreas internas.
-- Row Level Security nas tabelas de negócio.
-- Políticas baseadas no vínculo ativo do usuário com a organização.
+- Regras do Firestore no aplicativo e autorização explícita no servidor web.
+- Acesso limitado ao salonId e ao perfil ativo do usuário.
 - Validação de entrada no servidor.
 - Nenhuma chave administrativa enviada ao navegador.
 - Variáveis sensíveis apenas no ambiente de servidor.
 - Cadastro público de usuários desabilitado.
-- Testes de acesso direto ao banco, além dos testes de navegação.
+- Validar autorização do servidor e regras do Firestore, além dos fluxos de navegação.
 
 ### Privacidade
 
@@ -440,7 +440,7 @@ A função deve validar organização, autorização e integridade, sem depender
 ### Estratégia inicial
 
 - Um projeto Next.js.
-- Um projeto Supabase para produção.
+- O projeto Firebase do NailFlow para dados compartilhados.
 - Desenvolvimento e testes de banco preferencialmente locais.
 - Sem ambiente de homologação permanentemente pago.
 - Sem domínio próprio obrigatório para começar.
@@ -453,7 +453,7 @@ A função deve validar organização, autorização e integridade, sem depender
 | Item | Orientação |
 | --- | --- |
 | Vercel | Confirmar o plano permitido para uso comercial antes da produção |
-| Supabase | Começar no plano gratuito se os limites e condições atenderem ao uso |
+| Firebase | Reavaliar cotas e cobrança conforme o volume e as funções utilizadas |
 | Domínio | Opcional; tem custo próprio |
 | E-mail de autenticação | Validar limites e configuração de SMTP antes do uso real |
 | WhatsApp | Abertura manual por link, sem custo de API |
@@ -461,7 +461,7 @@ A função deve validar organização, autorização e integridade, sem depender
 
 O fato de existirem apenas dois usuários não torna o uso do salão não comercial. **Não planejar a operação comercial presumindo que o Vercel Hobby pode ser utilizado.**
 
-O plano gratuito do Supabase pode ter limites e suspensão por baixa atividade. Ele pode servir ao início, mas não deve ser tratado como garantia de disponibilidade.
+O plano gratuito do Firebase possui cotas e limites por produto; acompanhar o consumo e confirmar a necessidade de cobrança antes da operação real.
 
 Os valores e condições dos provedores devem ser confirmados na contratação. Este planejamento não fixa orçamento mensal.
 
@@ -665,7 +665,7 @@ A aplicação deve estar preparada para receber módulos, não implementar módu
 | Retorno | Manual após previsão automática | Validar a rotina com as duas pessoas |
 | Agenda | Fora da primeira versão | Confirmar se há dependência operacional urgente |
 | Dados existentes | Cadastro manual no início | Avaliar importação simples caso exista uma base |
-| Infraestrutura | Next.js, Vercel e Supabase | Confirmar planos, limites e uso comercial |
+| Infraestrutura | Next.js, Vercel e Firebase | Confirmar planos, limites e uso comercial |
 | Contratos | Posteriores e independentes | Obter o modelo integral |
 
 Essas premissas permitem iniciar o planejamento técnico sem esperar por decisões de funcionalidades futuras.
@@ -695,13 +695,13 @@ Uma tarefa só estará concluída quando:
 - Tratar erros e estados de carregamento.
 - Passar nos testes relevantes.
 - Passar em tipos, lint e build.
-- Possuir migração versionada, quando necessária.
+- Possuir regras, índices ou estrutura de dados documentados e versionados no repositório responsável.
 - Não expuser credenciais nem dados indevidos.
 - Estiver documentada quando afetar operação ou recuperação.
 
 ## 18. Resumo da recomendação
 
-Construir uma aplicação Next.js modular, com autenticação e PostgreSQL no Supabase, publicada na Vercel.
+Construir uma aplicação Next.js modular, com autenticação e Cloud Firestore compartilhado com o aplicativo NailFlow, publicada na Vercel.
 
 A primeira versão deverá entregar somente:
 

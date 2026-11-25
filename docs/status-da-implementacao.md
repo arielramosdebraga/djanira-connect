@@ -1,51 +1,38 @@
 # Status da implementação
 
-Atualizado em 17/11/2026.
+Atualizado em 25/11/2026.
 
-## Implementado
+## Implementado no site
 
-- Fundação: autenticação, sessão protegida, organização e papéis.
-- Serviços: cadastro, ativação e desativação.
-- Contatos: cadastro, edição, arquivamento, máscara de telefone, busca instantânea, filtros e data do último contato.
-- Atendimentos: registro, snapshots históricos, retornos e cancelamento administrativo.
-- Retornos: fila, adiamento, dispensa, WhatsApp manual e registro explícito de contato.
-- Configurações: nome, fuso horário e mensagem padrão.
-- Configurações: telefone do WhatsApp do salão.
-- Agenda: horários semanais fixos das 09:00 às 18:00 e compromissos internos.
-- Reservas públicas: catálogo, validação de disponibilidade e criação de cliente/reserva.
-- Reservas públicas: horários livres por serviço/data e contato direto via WhatsApp.
-- Início: calendário semanal e modal para novo agendamento.
-- Massa fictícia para validação manual.
+- Login, cookie de sessão HttpOnly e recuperação de senha pelo Firebase Authentication.
+- Consultas e gravações de servidor no Firestore com validação de salão e papel.
+- Clientes, compromissos e atendimentos mapeados para coleções Firebase.
+- Reserva pública validada por Route Handler e gravação com verificação de disponibilidade e idempotência.
+- Serviços, profissionais, horários, retornos e histórico de contatos no Firestore.
+- Projeto e documentação preparados para compartilhar clients e appointments com o NailFlow.
 
-## Migrations aplicadas no ambiente de desenvolvimento
+## Configuração externa ainda necessária
 
-Executar em ordem no projeto Supabase:
+- Configurar NEXT_PUBLIC_FIREBASE_SALON_ID com o ID real do documento salons/{salonId}.
+- Criar e cadastrar FIREBASE_SERVICE_ACCOUNT_BASE64 ou FIREBASE_SERVICE_ACCOUNT_JSON em ambiente local e Vercel.
+- Confirmar contas Firebase Authentication e documentos users/{uid} para cada pessoa do salão.
+- Configurar as variáveis de Firebase na Vercel para Preview e Production.
+- Publicar no Firebase o índice composto de clients (salonId, phoneNormalized) incluído no NailFlow.
+- Confirmar índices compostos adicionais do Firestore quando as consultas forem executadas.
 
-1. `20261116000900_public_reservations.sql`
-2. `20261116001000_demo_data.sql`
-3. `20261116001100_fixed_business_hours.sql`
-4. `20261116001200_cancel_attendances.sql`
-5. `20261116001300_public_available_slots.sql`
-6. `20261116001400_salon_whatsapp.sql`
-7. `20261117000100_edit_attendances.sql`
-8. `20261117000200_public_reservation_safety.sql`
-9. `20261117000300_public_reservation_daily_limit.sql`
+## Validações deste trabalho
 
-As migrations de `001` a `008` são pré-requisitos dos módulos anteriores.
+- Typecheck do Djanira Connect: passou após a limpeza final.
+- Lint do Djanira Connect: passou após a limpeza final.
+- Vitest no Djanira Connect: 10 testes passaram; 100% de linhas nos módulos incluídos atualmente na configuração de cobertura.
+- Typecheck, lint e Vitest do NailFlow: passaram; 79 testes passaram.
+- A cobertura do Djanira Connect mede os módulos de domínio configurados, não todas as rotas e componentes da aplicação.
+- Build de produção do Djanira Connect: passou; páginas com dados Firebase são renderizadas por requisição.
+- Nenhum dado produtivo foi importado; os dois projetos foram descritos como ambientes de teste.
 
-## Pendências antes da produção
+## Próximos passos
 
-- Executar typecheck, lint, testes e build.
-- Validar fluxos principais manualmente em computador e celular.
-- Revisar RLS e permissões com contas de administrador e operador.
-- Testar recuperação de senha e configuração de e-mail do Supabase.
-- Configurar variáveis de ambiente na hospedagem.
-- Definir backup, restauração e procedimento de recuperação de acesso.
-- Revisar proteção contra abuso da reserva pública além do limite diário por telefone.
-- Atualizar o PRD e o roadmap para refletir que agenda, horários públicos e contato via WhatsApp já foram implementados.
-- Integrar a branch do módulo em `develop` após a validação.
-
-## Critério de liberação
-
-O sistema só deve ser usado com dados reais depois de aplicar as migrations,
-concluir a validação manual e obter sucesso em typecheck, lint, testes e build.
+1. Fornecer o salonId e configurar a credencial de serviço sem compartilhá-la no chat.
+2. Ativar o provedor de e-mail/senha e revisar os perfis users/{uid}.
+3. Validar login, leitura/gravação compartilhada, atendimento e reserva pública.
+4. Monitorar limites e configurar backups do Firestore.

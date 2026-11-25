@@ -1,70 +1,46 @@
-# Modelo de dados inicial
+# Modelo de dados compartilhado
 
-## Entidades
+O site e o NailFlow usam documentos do Cloud Firestore. Dados de cada salão levam salonId; o backend web confere o escopo no servidor.
 
-| Entidade | Responsabilidade |
-| --- | --- |
-| Organização | Identificação e configurações do salão |
-| Membro | Usuário autenticado, organização e papel |
-| Serviço | Catálogo de serviços |
-| Cliente | Dados de contato e preferências |
-| Atendimento | Serviço realizado e snapshot histórico |
-| Retorno | Previsão e situação do acompanhamento |
-| Registro de contato | Histórico de contatos realizados |
-| Evento de auditoria | Alterações críticas e responsáveis |
+## Coleções compartilhadas
 
-## Convenções
+### salons/{salonId}
 
-- Identificadores usam UUID.
-- Valores monetários usam inteiros em centavos.
-- Timestamps são armazenados com fuso.
-- Datas previstas são datas de calendário.
-- Cálculos usam o fuso da organização, inicialmente `America/Sao_Paulo`.
-- Todas as entidades de negócio possuem vínculo com a organização.
-- Chaves estrangeiras e restrições de integridade são obrigatórias.
-- Consultas frequentes devem possuir índices adequados.
+- name, active.
+- settings.timezone e settings.currency.
+- O site também usa settings.defaultMessage e settings.whatsappPhone.
 
-## Campos principais
+### users/{uid}
 
-### Organização
+- uid, email, displayName, role, salonId e active.
+- Papéis esperados: super_admin, salon_owner, nail_technician ou manicure (compatibilidade com perfis existentes).
 
-`id`, `name`, `timezone`, `default_message`, `created_at`, `updated_at`
+### clients/{clientId}
 
-### Membro
+- salonId, name, phone, phoneNormalized, email e birthDate.
+- notes, tags, status, doNotContact, createdAt, lastVisit e lastContactAt.
+- phoneNormalized contém somente dígitos e inclui o código do país quando conhecido.
 
-`id`, `organization_id`, `user_id`, `role`, `active`, `created_at`
+### appointments/{appointmentId}
 
-### Serviço
+- salonId, manicureId, clientId, serviceId e professionalId.
+- status, startTime, endTime, notes e priceCents.
+- Snapshots históricos do serviço e profissional, commissionRateSnapshot, idempotencyKey, source, createdBy, createdAt e updatedAt.
+- Estados usados pelo site: scheduled, confirmed, completed e cancelled.
 
-`id`, `organization_id`, `name`, `average_price_cents`,
-`duration_minutes`, `return_period_days`, `active`, `created_at`, `updated_at`
+## Coleções específicas do site
 
-### Cliente
+- services: catálogo, preço em centavos, duração e prazo de retorno.
+- professionals: profissionais e percentual padrão de comissão.
+- availabilityRules: dias e horários de funcionamento do salão.
+- followUps: previsão e estado de retorno de cliente.
+- contactLogs: histórico de contatos feitos.
 
-`id`, `organization_id`, `name`, `phone_normalized`, `notes`,
-`do_not_contact`, `status`, `last_contact_at`, `created_at`, `updated_at`
+## Integridade e autorização
 
-### Atendimento
-
-`id`, `organization_id`, `customer_id`, `service_id`, `performed_at`,
-`service_name_snapshot`, `service_duration_snapshot`,
-`return_period_days_snapshot`, `price_cents`, `notes`, `created_by`,
-`status`, `cancelled_at`, `cancelled_by`, `created_at`, `updated_at`
-
-### Retorno
-
-`id`, `organization_id`, `customer_id`, `service_id`, `appointment_id`,
-`original_due_date`, `next_follow_up_date`, `status`, `contacted_at`,
-`contacted_by`, `postponed_at`, `dismissed_at`, `created_at`, `updated_at`
-
-### Registro de contato
-
-`id`, `organization_id`, `customer_id`, `follow_up_id`, `channel`,
-`contacted_at`, `created_by`, `notes`, `created_at`
-
-## Integridade
-
-- Deve existir no máximo um retorno ativo por combinação de cliente e serviço.
-- Atendimento e retorno devem ser criados ou atualizados na mesma transação.
-- RLS deve limitar registros ao vínculo ativo do usuário com a organização.
-- Dados históricos não podem depender de valores atuais do catálogo.
+- Todo documento de negócio deve ser validado contra o salonId da sessão.
+- clients e appointments são as coleções compartilhadas com NailFlow.
+- Agendamentos e atendimentos referenciam o mesmo cliente e são distinguidos pelo estado; dados históricos usam snapshots para manter valores originais.
+- Criação de reserva usa chave idempotente e verifica conflitos de horário no servidor.
+- O SDK Admin ignora as regras do Firestore; as operações web fazem validação e autorização explicitamente.
+- O aplicativo NailFlow continua sujeito às regras do Firestore; nenhuma regra de acesso anônimo deve ser adicionada para o site.

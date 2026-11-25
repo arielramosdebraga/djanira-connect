@@ -11,7 +11,8 @@
 - [PRD](prd.md): visão, usuários, escopo, requisitos e critérios de aceite do produto.
 - [Roadmap e módulos](roadmap.md): ordem de implementação, escopo e critérios de conclusão.
 - [Arquitetura](arquitetura.md): stack, organização do código e fronteiras dos módulos.
-- [Modelo de dados](modelo-de-dados.md): entidades, relacionamentos e convenções persistentes.
+- [Firebase compartilhado](firebase-compartilhado.md): credenciais, perfis, salonId e ativação local/Vercel.
+- [Modelo de dados](modelo-de-dados.md): coleções compartilhadas e convenções do Firestore.
 - [Regras de negócio](regras-de-negocio.md): comportamentos que devem ser preservados na implementação.
 - [Guia de desenvolvimento](guia-de-desenvolvimento.md): fluxo local, branches, validações e publicação.
 - [Decisões e pendências](decisoes.md): decisões assumidas e pontos que precisam de confirmação.
