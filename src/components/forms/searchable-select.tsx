@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 type SearchableOption = { value: string; label: string };
 
 type SearchableSelectProps = {
+  id?: string;
   name: string;
   placeholder: string;
   options: SearchableOption[];
@@ -13,7 +14,7 @@ type SearchableSelectProps = {
   onValueChange?: (value: string) => void;
 };
 
-export default function SearchableSelect({ name, placeholder, options, required = false, defaultValue = "", onValueChange }: SearchableSelectProps) {
+export default function SearchableSelect({ id, name, placeholder, options, required = false, defaultValue = "", onValueChange }: SearchableSelectProps) {
   const [query, setQuery] = useState(options.find((option) => option.value === defaultValue)?.label ?? "");
   const [open, setOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -30,6 +31,7 @@ export default function SearchableSelect({ name, placeholder, options, required 
     <div className="relative">
       <input
         ref={inputRef}
+        id={id}
         className="mt-2 w-full rounded-xl border border-[#d9cec8] px-4 py-3 pr-10 focus:border-[#8f4e68] focus:outline-none"
         placeholder={placeholder}
         required={required}
