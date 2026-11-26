@@ -15,7 +15,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Token de acesso inválido." }, { status: 400 });
     }
 
-    const auth = getFirebaseAdminAuth();
+    const auth = await getFirebaseAdminAuth();
     const decoded = await auth.verifyIdToken(body.idToken, true);
     const profile = await getFirebaseAdminDb().collection("users").doc(decoded.uid).get();
     const user = profile.data();

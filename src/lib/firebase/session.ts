@@ -10,7 +10,8 @@ export async function getFirebaseSession() {
   if (!value) return null;
 
   try {
-    const decoded = await getFirebaseAdminAuth().verifySessionCookie(value, true);
+    const auth = await getFirebaseAdminAuth();
+    const decoded = await auth.verifySessionCookie(value, true);
     const userSnapshot = await getFirebaseAdminDb().collection("users").doc(decoded.uid).get();
     if (!userSnapshot.exists) return null;
 
