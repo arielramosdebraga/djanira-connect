@@ -3,6 +3,7 @@ import "./globals.css";
 import ValidationMessages from "@components/forms/validation-messages";
 import AppShell from "@components/layout/app-shell";
 import { getFirebaseSession } from "@lib/firebase/session";
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
@@ -14,5 +15,13 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const session = await getFirebaseSession();
   const authenticated = Boolean(session?.userId);
-  return <html lang="pt-BR"><body><ValidationMessages /><AppShell authenticated={authenticated}>{children}</AppShell></body></html>;
+  return (
+    <html lang="pt-BR">
+      <body>
+        <ValidationMessages />
+        <AppShell authenticated={authenticated}>{children}</AppShell>
+        <Analytics />
+      </body>
+    </html>
+  );
 }
