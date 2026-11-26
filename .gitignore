@@ -34,11 +34,6 @@ yarn-error.log*
 .env*
 !.env.example
 
-# Supabase local development
-.supabase/
-supabase/.branches/
-supabase/.temp/
-
 # local tooling
 .vscode/
 .idea/

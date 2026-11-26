@@ -10,9 +10,9 @@ export const metadata = { title: "Serviços" };
 export const instant = false;
 
 export default async function ServicesPage({ searchParams }: ServicesPageProps) {
-  const { membership, supabase } = await requireActiveMember();
+  const { membership, firebase } = await requireActiveMember();
   const params = await searchParams;
-  const { data: services, error } = await supabase.from("services").select("id, name, average_price_cents, duration_minutes, return_period_days, active").eq("organization_id", membership.organization_id).order("active", { ascending: false }).order("name");
+  const { data: services, error } = await firebase.collection("services").select("id, name, average_price_cents, duration_minutes, return_period_days, active").eq("organization_id", membership.organization_id).order("active", { ascending: false }).order("name");
   const isAdmin = membership.role === "admin";
 
   return (

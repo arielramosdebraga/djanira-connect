@@ -1,60 +1,47 @@
 # Arquitetura
 
-## Direção técnica
+O Djanira Connect é um monólito web Next.js. Seu backend usa o mesmo projeto Firebase do aplicativo NailFlow.
 
-O projeto será um monólito modular web, com interface e operações de servidor
-no mesmo projeto.
+## Direção técnica
 
 | Camada | Tecnologia ou decisão |
 | --- | --- |
-| Aplicação | Next.js com App Router e React |
+| Aplicação | Next.js App Router e React |
 | Linguagem | TypeScript |
 | Estilos | Tailwind CSS |
-| Componentes | shadcn/ui apenas quando necessário |
-| Formulários | React Hook Form e Zod |
-| Banco | PostgreSQL no Supabase |
-| Autenticação | Supabase Auth |
+| Autenticação no navegador | Firebase Authentication |
+| Sessão do site | Cookie HttpOnly criado e validado no servidor |
+| Banco | Cloud Firestore compartilhado com NailFlow |
 | Hospedagem | Vercel |
-| Testes | Vitest e Playwright |
+| Validação | Zod |
 
-## Organização de código
+## Limite de compartilhamento
 
-As regras de negócio devem ficar fora dos componentes visuais. Cada módulo deve
-concentrar tipos, validações, funções de domínio, acesso a dados e componentes
-específicos.
+- clients contém clientes e contatos por salonId.
+- appointments contém agendamentos e atendimentos. O campo status distingue compromissos (scheduled/confirmed) de atendimentos (completed).
+- users e salons fornecem identidade, papel e escopo do salão.
+- services, professionals, availabilityRules, followUps e contactLogs são coleções usadas pelo site; o aplicativo não precisa consumi-las para compartilhar clientes e agenda.
+- Os campos compartilhados preservam os nomes camelCase do modelo Firebase. O adaptador web traduz o formato de leitura usado pelas telas atuais.
 
-```text
-src/
-  app/                 # rotas e telas
-  components/          # componentes compartilhados
-  domains/             # regras por módulo
-  actions/             # escritas via Server Actions
-  lib/                 # autenticação, datas e clientes externos
-  types/               # tipos compartilhados
-supabase/
-  migrations/          # alterações versionadas do banco
-  seed.sql             # dados fictícios para desenvolvimento
-tests/
-  unit/
-  integration/
-  e2e/
-```
+## Segurança
 
-## Regras de acesso
+- O Firebase Admin SDK é exclusivo do servidor e ignora regras do Firestore.
+- Páginas e Server Actions validam cookie de sessão, papel e vínculo ativo ao salonId antes de acessar dados.
+- O login valida Firebase Authentication e confere o perfil em users/{uid} e o salão em salons/{salonId}.
+- A reserva pública é validada em Route Handlers no servidor. Não há permissão de leitura ou escrita anônima nas regras do Firestore.
+- O SDK cliente é usado apenas para autenticação e recuperação de senha.
+- A credencial de serviço fica em FIREBASE_SERVICE_ACCOUNT_BASE64 ou FIREBASE_SERVICE_ACCOUNT_JSON, somente no ambiente de servidor.
 
-- Consultas internas passam pela camada de servidor.
-- Escritas usam Server Actions com validação e autorização.
-- Route Handlers ficam reservados para APIs e integrações futuras.
-- A sessão autenticada acompanha as operações no Supabase.
-- Row Level Security é obrigatória nas tabelas de negócio.
-- Nenhuma chave administrativa pode chegar ao navegador.
+## Estrutura relacionada
 
-## O que não será adotado inicialmente
+- src/app: rotas, telas, Server Actions e Route Handlers.
+- src/components: componentes compartilhados.
+- src/lib/firebase: SDK cliente/admin, sessão e acesso ao Firestore.
+- src/lib/auth: autorização das rotas web.
+- docs/firebase-compartilhado.md e docs/modelo-de-dados.md: operação e dados.
 
-- Backend separado.
-- Microsserviços.
-- Redis ou filas.
-- ORM adicional sem necessidade concreta.
-- Sincronização em tempo real.
-- Aplicativo nativo.
-- Infraestrutura completa de SaaS multitenant.
+## Fora do escopo atual
+
+- Migração de dados produtivos: os dois projetos ainda estão em teste e não possuem dados produtivos a preservar.
+- Sincronização do Google Calendar e notificações por WhatsApp.
+- Acesso público direto ao Firestore.

@@ -17,7 +17,7 @@ function dateTime(value: string) { return new Intl.DateTimeFormat("pt-BR", { tim
 function decimal(value: number) { return new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 2 }).format(value); }
 
 export default async function ReportsPage({ searchParams }: { searchParams: SearchParams }) {
-  const { membership, supabase } = await requireActiveMember();
+  const { membership, firebase } = await requireActiveMember();
   const params = await searchParams;
   const today = getSalonToday();
   const defaultStartDate = getSalonMonthStart(today);
@@ -29,11 +29,11 @@ export default async function ReportsPage({ searchParams }: { searchParams: Sear
   const reportStartDate = validRange ? startDate : defaultStartDate;
   const reportEndDate = validRange ? endDate : today;
   const professionalId = firstParam(params.profissional) ?? "";
-  const { data: professionals } = await supabase.from("professionals").select("id, name, default_commission_rate").eq("organization_id", membership.organization_id).eq("active", true).order("name");
+  const { data: professionals } = await firebase.collection("professionals").select("id, name, default_commission_rate").eq("organization_id", membership.organization_id).eq("active", true).order("name");
   const selectedProfessional = professionals?.find((professional) => professional.id === professionalId);
   const parsedPercentage = Number(firstParam(params.percentual) ?? String(selectedProfessional?.default_commission_rate ?? 0));
   const percentage = Number.isFinite(parsedPercentage) ? Math.min(100, Math.max(0, parsedPercentage)) : 0;
-  let attendanceQuery = supabase.from("attendances").select("id, performed_at, service_name_snapshot, price_cents, professional_id, professional_name_snapshot, commission_rate_snapshot, customers(name)").eq("organization_id", membership.organization_id).eq("status", "completed").gte("performed_at", `${reportStartDate}T00:00:00-03:00`).lte("performed_at", `${reportEndDate}T23:59:59-03:00`).order("performed_at", { ascending: false }).limit(500);
+  let attendanceQuery = firebase.collection("attendances").select("id, performed_at, service_name_snapshot, price_cents, professional_id, professional_name_snapshot, commission_rate_snapshot, customers(name)").eq("organization_id", membership.organization_id).eq("status", "completed").gte("performed_at", `${reportStartDate}T00:00:00-03:00`).lte("performed_at", `${reportEndDate}T23:59:59-03:00`).order("performed_at", { ascending: false }).limit(500);
   if (professionalId) attendanceQuery = attendanceQuery.eq("professional_id", professionalId);
   const { data: attendances, error } = await attendanceQuery;
   const employeeName = selectedProfessional?.name ?? "";

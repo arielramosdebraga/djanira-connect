@@ -9,16 +9,12 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:coverage": "vitest run --coverage",
-    "supabase:start": "npx supabase start",
-    "supabase:stop": "npx supabase stop",
-    "supabase:reset": "npx supabase db reset",
-    "supabase:status": "npx supabase status",
-    "supabase:types": "npx supabase gen types typescript --local > src/types/database.ts"
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@supabase/ssr": "^0.7.0",
-    "@supabase/supabase-js": "^2.76.1",
+    "@vercel/analytics": "2.0.1",
+    "firebase": "^13.4.0",
+    "firebase-admin": "^14.5.1",
     "next": "16.4.6",
     "react": "19.3.0",
     "react-dom": "19.3.0",

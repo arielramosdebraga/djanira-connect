@@ -10,11 +10,11 @@ export const metadata = { title: "Configurações" };
 export const instant = false;
 
 export default async function SettingsPage({ searchParams }: SettingsPageProps) {
-  const { membership, supabase } = await requireActiveMember();
+  const { membership, firebase } = await requireActiveMember();
   const params = await searchParams;
   const [{ data: organization }, { data: rules }] = await Promise.all([
-    supabase.from("organizations").select("name, timezone, default_message, whatsapp_phone").eq("id", membership.organization_id).single(),
-    supabase.from("availability_rules").select("weekday, active").eq("organization_id", membership.organization_id).order("weekday"),
+    firebase.collection("organizations").select("name, timezone, default_message, whatsapp_phone").eq("id", membership.organization_id).single(),
+    firebase.collection("availability_rules").select("weekday, active").eq("organization_id", membership.organization_id).order("weekday"),
   ]);
   const byDay = new Map((rules ?? []).map((rule) => [rule.weekday, rule]));
   const isAdmin = membership.role === "admin";

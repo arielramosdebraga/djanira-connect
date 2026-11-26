@@ -61,7 +61,7 @@ são verificadas no servidor e no banco.
 - Provisionamento restrito de duas contas individuais.
 - Papéis de administrador e operador.
 - Sessão protegida para áreas internas.
-- Isolamento dos dados da organização por autorização no servidor e Row Level Security.
+- Isolamento dos dados do salão por autorização no servidor e regras do Firestore no aplicativo.
 
 ### Serviços
 
@@ -142,12 +142,12 @@ O detalhamento normativo está em `regras-de-negocio.md` e `planejamento-da-etap
 - Interface responsiva para computador e celular.
 - Aplicação e interface em português brasileiro.
 - Validação no servidor para todas as entradas relevantes.
-- Row Level Security nas tabelas de negócio.
+- Regras do Firestore no aplicativo e autorização explícita das operações do servidor web.
 - Segredos administrativos somente no ambiente de servidor.
 - Paginação em listas e histórico.
 - Estados explícitos de carregamento, erro, vazio e sucesso.
 - Logs sem telefone completo ou observações de clientes.
-- Migrações versionadas e procedimento de backup/restauração testável antes do uso real.
+- Modelo, regras e índices Firestore documentados e procedimento de backup/restauração testável antes do uso real.
 - Preview isolado de dados de produção.
 
 ## 10. Métricas de sucesso do piloto
@@ -174,7 +174,7 @@ O detalhamento normativo está em `regras-de-negocio.md` e `planejamento-da-etap
 
 ## 12. Dependências e decisões abertas
 
-- Definir na Fundação o fluxo de sessão entre Next.js e Supabase e aplicar políticas RLS por papel.
+- Integração implementada com Firebase Authentication e autorização do servidor por perfil e salonId; concluir configuração de credenciais e validação ponta a ponta.
 - Confirmar se ambas as pessoas precisam de papel de administrador.
 - Verificar existência de dados para importação e clientes sem telefone.
 - Definir procedimento de backup e recuperação de acesso.

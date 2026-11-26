@@ -1,8 +1,7 @@
 "use client";
 
 import AttendanceForm from "@app/atendimentos/attendance-form";
-import { createClient } from "@lib/supabase/browser";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 type AttendanceEditModalProps = {
   action: (formData: FormData) => void | Promise<void>;
@@ -16,9 +15,6 @@ type AttendanceEditModalProps = {
 
 export default function AttendanceEditModal({ action, attendance, customers, services, professionals = [], initialDate, initialTime }: AttendanceEditModalProps) {
   const [open, setOpen] = useState(false);
-  const [availableProfessionals, setAvailableProfessionals] = useState(professionals);
-  const professionalsLoaded = useRef(professionals.length > 0);
-  useEffect(() => { if (!open || professionalsLoaded.current) return; professionalsLoaded.current = true; createClient().from("professionals").select("id, name, default_commission_rate").eq("active", true).order("name").then(({ data }) => setAvailableProfessionals((data ?? []) as typeof professionals)); }, [open]);
   return <>
     <button className="rounded-xl border border-[#d9cec8] px-4 py-2.5 text-sm font-semibold hover:border-[#8f4e68]" type="button" onClick={() => setOpen(true)}>Corrigir</button>
     {open ? <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#29231f]/50 p-4" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setOpen(false); }}>
@@ -28,7 +24,7 @@ export default function AttendanceEditModal({ action, attendance, customers, ser
           <button className="rounded-lg px-3 py-2 text-xl text-[#716963] hover:bg-[#f8f7f4]" type="button" aria-label="Fechar" onClick={() => setOpen(false)}>×</button>
         </div>
         <div className="modal-scrollbar max-h-[calc(92vh-10.5rem)] overflow-y-auto px-6 pb-6 sm:px-8 sm:pb-8">
-          <AttendanceForm action={action} customers={customers} services={services} professionals={availableProfessionals} attendanceId={attendance.id} initialCustomerId={attendance.customer_id} initialServiceId={attendance.service_id} initialProfessionalId={attendance.professional_id ?? ""} initialDate={initialDate} initialTime={initialTime} initialPriceCents={attendance.price_cents} initialNotes={attendance.notes ?? ""} submitLabel="Salvar correção" />
+          <AttendanceForm action={action} customers={customers} services={services} professionals={professionals} attendanceId={attendance.id} initialCustomerId={attendance.customer_id} initialServiceId={attendance.service_id} initialProfessionalId={attendance.professional_id ?? ""} initialDate={initialDate} initialTime={initialTime} initialPriceCents={attendance.price_cents} initialNotes={attendance.notes ?? ""} submitLabel="Salvar correção" />
         </div>
       </section>
     </div> : null}

@@ -13,16 +13,16 @@ export const instant = false;
 type DashboardPageProps = { searchParams: Promise<{ erro?: string; resultado?: string }> };
 
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
-  const { membership, supabase } = await requireActiveMember();
+  const { membership, firebase } = await requireActiveMember();
   const params = await searchParams;
   const today = getSalonToday();
   const endDate = addCalendarDays(today, 7);
   const [{ data: appointments }, { data: customers }, { data: services }, { data: followUps }, { data: revenueAttendances }] = await Promise.all([
-    supabase.from("appointments").select("id, starts_at, ends_at, status, customers(name), services(name)").eq("organization_id", membership.organization_id).order("starts_at").limit(100),
-    supabase.from("customers").select("id, name, phone_normalized").eq("organization_id", membership.organization_id).eq("status", "active").order("name"),
-    supabase.from("services").select("id, name, duration_minutes").eq("organization_id", membership.organization_id).eq("active", true).order("name"),
-    supabase.from("follow_ups").select("id, next_follow_up_date, status, customers(name, phone_normalized, do_not_contact, status), services(name)").eq("organization_id", membership.organization_id).in("status", ["pending", "postponed"]).lte("next_follow_up_date", endDate).order("next_follow_up_date").limit(20),
-    supabase.from("attendances").select("performed_at, price_cents, status").eq("organization_id", membership.organization_id).eq("status", "completed").gte("performed_at", `${today.slice(0, 7)}-01T00:00:00-03:00`).lte("performed_at", `${today}T23:59:59-03:00`).limit(200),
+    firebase.collection("appointments").select("id, starts_at, ends_at, status, customers(name), services(name)").eq("organization_id", membership.organization_id).order("starts_at").limit(100),
+    firebase.collection("customers").select("id, name, phone_normalized").eq("organization_id", membership.organization_id).eq("status", "active").order("name"),
+    firebase.collection("services").select("id, name, duration_minutes").eq("organization_id", membership.organization_id).eq("active", true).order("name"),
+    firebase.collection("follow_ups").select("id, next_follow_up_date, status, customers(name, phone_normalized, do_not_contact, status), services(name)").eq("organization_id", membership.organization_id).in("status", ["pending", "postponed"]).lte("next_follow_up_date", endDate).order("next_follow_up_date").limit(20),
+    firebase.collection("attendances").select("performed_at, price_cents, status").eq("organization_id", membership.organization_id).eq("status", "completed").gte("performed_at", `${today.slice(0, 7)}-01T00:00:00-03:00`).lte("performed_at", `${today}T23:59:59-03:00`).limit(200),
   ]);
   const publicServices = (services ?? []).map((service) => ({ service_id: service.id, service_name: service.name, duration_minutes: service.duration_minutes }));
 

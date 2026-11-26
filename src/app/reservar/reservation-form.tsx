@@ -2,7 +2,6 @@
 
 import MaskedDateInput from "@components/forms/masked-date-input";
 import SearchableSelect from "@components/forms/searchable-select";
-import { createClient } from "@lib/supabase/browser";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 
@@ -54,10 +53,16 @@ export default function ReservationForm({ action, services, returnTo = "/reserva
     const timer = window.setTimeout(() => {
       setLoadingTimes(true);
       setSlotsError(false);
-      createClient().rpc("get_public_reservation_slots", { p_service_id: serviceId, p_date: reservationDate }).then(({ data, error }) => {
+      fetch(`/api/public/reservations?serviceId=${encodeURIComponent(serviceId)}&date=${encodeURIComponent(reservationDate)}`, { cache: "no-store" }).then(async (response) => {
+        const result = await response.json() as { slots?: Array<{ slot_time: string }>; error?: string };
         if (cancelled) return;
-        setSlotsError(Boolean(error));
-        setAvailableTimes(error ? [] : (data ?? []).map((slot: { slot_time: string }) => slot.slot_time.slice(0, 5)));
+        setSlotsError(!response.ok);
+        setAvailableTimes(response.ok ? (result.slots ?? []).map((slot) => slot.slot_time.slice(0, 5)) : []);
+        setLoadingTimes(false);
+      }).catch(() => {
+        if (cancelled) return;
+        setSlotsError(true);
+        setAvailableTimes([]);
         setLoadingTimes(false);
       });
     }, 0);

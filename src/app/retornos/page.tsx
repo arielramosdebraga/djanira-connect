@@ -12,13 +12,13 @@ export const instant = false;
 function nested<T>(value: T | T[] | null): T | null { return Array.isArray(value) ? value[0] ?? null : value; }
 
 export default async function FollowUpsPage({ searchParams }: FollowUpPageProps) {
-  const { membership, supabase } = await requireActiveMember();
+  const { membership, firebase } = await requireActiveMember();
   const params = await searchParams;
   const today = getSalonToday();
   const endDate = addCalendarDays(today, 7);
   const [{ data: organization }, { data: followUps, error }] = await Promise.all([
-    supabase.from("organizations").select("name, default_message").eq("id", membership.organization_id).single(),
-    supabase.from("follow_ups").select("id, original_due_date, next_follow_up_date, status, customers!inner(name, phone_normalized, do_not_contact, status), services(name)").eq("organization_id", membership.organization_id).in("status", ["pending", "postponed"]).lte("next_follow_up_date", endDate).order("next_follow_up_date"),
+    firebase.collection("organizations").select("name, default_message").eq("id", membership.organization_id).single(),
+    firebase.collection("follow_ups").select("id, original_due_date, next_follow_up_date, status, customers!inner(name, phone_normalized, do_not_contact, status), services(name)").eq("organization_id", membership.organization_id).in("status", ["pending", "postponed"]).lte("next_follow_up_date", endDate).order("next_follow_up_date"),
   ]);
   const visibleFollowUps = (followUps ?? []).filter((item) => { const customer = nested(item.customers); return customer?.status === "active" && !customer.do_not_contact; });
   const todayItems = visibleFollowUps.filter((item) => item.next_follow_up_date <= today);

@@ -1,43 +1,34 @@
 # Decisões e pendências
 
-## Decisões assumidas
+## Decisões vigentes
 
-| Tema | Decisão atual |
+| Tema | Decisão |
 | --- | --- |
-| Operação | Um salão na primeira versão |
-| Usuários | Duas contas individuais |
-| Papéis | Administrador e operador |
-| Aplicação | Aplicação web com React e Next.js |
-| Banco | PostgreSQL no Supabase |
-| Hospedagem | Vercel, com plano comercial a confirmar |
-| Telefone | Obrigatório e normalizado com código do país |
-| Atendimento | Um serviço por registro |
-| Retorno | Previsão automática e contato manual |
-| Agenda | Fora da primeira entrega |
-| Reserva pública | Posterior ao piloto interno |
-| Contratos | Módulo independente |
+| Aplicação web | Next.js App Router, React e TypeScript |
+| Backend compartilhado | Projeto Firebase já usado pelo NailFlow |
+| Banco | Cloud Firestore |
+| Autenticação | Firebase Authentication do NailFlow |
+| Dados compartilhados | Coleções clients e appointments, isoladas por salonId |
+| Identidade | Perfil users/{uid} com papel e salonId |
+| Hospedagem | Vercel |
+| Valores | Inteiros em centavos |
+| Telefone | Armazenar telefone para exibição e versão normalizada em dígitos |
 
-## Pendências para validação
+## Motivo da mudança de backend
 
-- Confirmar durante a fundação a integração de servidor entre Next.js e Supabase
-  (sessão, consultas, Server Actions e políticas RLS).
-- Confirmar se ambas as pessoas precisam de permissões de administrador.
-- Verificar se existe uma base de clientes para importação.
-- Confirmar se todos os clientes possuem telefone.
-- Validar a rotina de retornos com as duas pessoas.
-- Confirmar planos, limites e uso comercial de Vercel e Supabase.
-- Definir a rotina de backup e testar restauração.
-- Obter o contrato integral do Salão Djanira Montclair antes do módulo de contratos.
-- Decidir posteriormente se haverá integração oficial do WhatsApp.
+O aplicativo NailFlow e o site ainda estão em fase de testes. Usar o mesmo projeto Firebase evita manter duas fontes de clientes e agenda. Não há dados produtivos a migrar; a integração passa a gravar diretamente nas coleções compartilhadas.
 
-## Fluxo de branches
+## Pendências de configuração
 
-As branches de módulo serão utilizadas quando a implementação de cada módulo
-começar. Antes de iniciar um módulo, sua branch deve ser criada ou atualizada a
-partir de `develop`, para incluir as decisões e alterações integradas mais
-recentes.
+- Definir o salonId correspondente ao documento salons/{salonId}.
+- Criar uma credencial de serviço do mesmo projeto Firebase para o backend web e armazená-la como variável privada na Vercel.
+- Criar ou verificar no Firebase Authentication as contas do site e seus perfis users/{uid} com papel, salão e estado ativo.
+- Configurar variáveis de ambiente de Firebase em Preview e Production.
+- Validar acesso com contas de administradora e profissional.
+- Definir backup e recuperação do Firestore.
+- Confirmar limites de uso e cobrança dos provedores antes da operação real.
+- Obter o contrato integral do salão antes do módulo de contratos.
 
-## Regra para novas decisões
+## Regras para futuras mudanças
 
-Mudanças que alterem escopo, segurança, modelo de dados, infraestrutura ou ordem
-dos módulos devem ser registradas neste arquivo antes da implementação.
+Alterações de modelo, papéis, isolamento por salão, autenticação ou infraestrutura devem ser registradas aqui e em modelo-de-dados.md antes da implementação.
