@@ -17,6 +17,14 @@ function formatPhoneInput(value: string) {
   return `(${areaCode}) ${number.slice(0, 5)}-${number.slice(5)}`;
 }
 
+function formatDuration(minutes: number) {
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  if (!hours) return `${minutes} min`;
+  if (!remainingMinutes) return `${hours} ${hours === 1 ? "hora" : "horas"}`;
+  return `${hours} ${hours === 1 ? "hora" : "horas"} ${remainingMinutes} min`;
+}
+
 function SubmitButton() {
   const { pending } = useFormStatus();
 
@@ -30,19 +38,21 @@ function SubmitButton() {
 type ReservationFormProps = {
   action: (formData: FormData) => void | Promise<void>;
   services: Array<{ service_id: string; service_name: string; duration_minutes: number }>;
+  initialServiceId?: string;
   returnTo?: string;
 };
 
-export default function ReservationForm({ action, services, returnTo = "/reservar" }: ReservationFormProps) {
+export default function ReservationForm({ action, services, initialServiceId = "", returnTo = "/reservar" }: ReservationFormProps) {
   const idempotencyInput = useRef<HTMLInputElement>(null);
   const [phone, setPhone] = useState("");
   const [reservationDate, setReservationDate] = useState("");
   const [reservationTime, setReservationTime] = useState("");
-  const [serviceId, setServiceId] = useState("");
+  const [serviceId, setServiceId] = useState(initialServiceId);
   const [availableTimes, setAvailableTimes] = useState<string[]>([]);
   const [loadingTimes, setLoadingTimes] = useState(false);
   const [slotsError, setSlotsError] = useState(false);
   const [formError, setFormError] = useState("");
+  const selectedService = services.find((service) => service.service_id === serviceId);
 
   useEffect(() => {
     if (!serviceId || !reservationDate) {
@@ -88,16 +98,21 @@ export default function ReservationForm({ action, services, returnTo = "/reserva
       <input type="hidden" name="returnTo" value={returnTo} />
       {formError ? <p className="rounded-xl border border-[#f0caca] bg-[#fff1f1] p-4 text-sm text-[#9b3e3e]" role="alert">{formError}</p> : null}
 
-      <label className="block text-sm font-medium">
-        Serviço
+      <div>
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+          <label className="text-sm font-medium" htmlFor="reservation-service">Serviço</label>
+          <span className="text-sm text-[#716963]" aria-live="polite">Tempo: {selectedService ? formatDuration(selectedService.duration_minutes) : "—"}</span>
+        </div>
         <SearchableSelect
+          id="reservation-service"
           name="serviceId"
           placeholder="Pesquise por serviço"
           required
+          defaultValue={initialServiceId}
           onValueChange={(value) => { setServiceId(value); setReservationTime(""); setFormError(""); }}
-          options={services.map((service) => ({ value: service.service_id, label: `${service.service_name} · ${service.duration_minutes} min` }))}
+          options={services.map((service) => ({ value: service.service_id, label: service.service_name }))}
         />
-      </label>
+      </div>
 
       <label className="block text-sm font-medium">
         Nome
